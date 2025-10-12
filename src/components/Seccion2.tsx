@@ -238,7 +238,7 @@ const Seccion2: React.FC = () => {
         <Select
           value={selectedProduct}
           onChange={(e) => setSelectedProduct(e.target.value as number)}
-          displayEmpty
+          displayEmpty 
           className="rounded-lg bg-white"
           renderValue={(selected) => (
             <div className="flex items-center gap-3">

@@ -31,7 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles
           signal: controller.signal,
           timeout: 10000 // 10 segundos de timeout
         });
-        
+       
         if (isMounted) {
           if (data.authenticated) {
             setAuthState({
@@ -79,7 +79,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles
     return <Navigate to="/AccesoProhibido" replace />;
   }
 
-  return <Element {...rest} user={authState.user} />;
+  // FIX: Casting del componente para evitar error de tipos
+  return React.createElement(Element, { ...rest, user: authState.user });
 };
 
 export default ProtectedRoute;
