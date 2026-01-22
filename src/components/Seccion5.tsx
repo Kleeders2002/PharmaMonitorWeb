@@ -1,4 +1,3 @@
-// Seccion5.tsx
 import { FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';

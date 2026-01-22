@@ -56,7 +56,7 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
         setExistingConditions(conditionsResponse.data);
         setFormaFarmaceutica(formasResponse.data);
       } catch (error) {
-        console.error('Error al cargar datos iniciales:', error);
+        // Error handled silently, user can see missing data
       }
     };
     fetchData();
@@ -105,7 +105,6 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
       }
     } catch (error) {
       setError('Error al guardar la condición ambiental');
-      console.error(error);
     }
   };
 
@@ -126,7 +125,7 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
         setPreview(response.data.url);
       }
     } catch (error) {
-      console.error("Error al subir imagen:", error);
+      // Error handled silently, image upload fails
     }
   };
 
@@ -352,28 +351,24 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
                               label="Concentración"
                               name="concentracion"
                               value={formData.concentracion}
-                              onChange={(e) => {
-                                if (/^\d*\.?\d*$/.test(e.target.value)) {
-                                  handleChange(e);
-                                }
-                              }}
+                              onChange={handleChange}  // Validación removida
                               required
                               fullWidth
                               variant="outlined"
                               sx={{
-                                '& .MuiOutlinedInput-root': {
-                                  borderRadius: '12px',
-                                  '&:hover fieldset': {
-                                    borderColor: '#2563eb',
-                                  },
-                                }
+                                  '& .MuiOutlinedInput-root': {
+                                      borderRadius: '12px',
+                                      '&:hover fieldset': {
+                                          borderColor: '#2563eb',
+                                      },
+                                  }
                               }}
                               InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <FaClipboardList className="text-blue-500" />
-                                  </InputAdornment>
-                                ),
+                                  startAdornment: (
+                                      <InputAdornment position="start">
+                                          <FaClipboardList className="text-blue-500" />
+                                      </InputAdornment>
+                                  ),
                               }}
                             />
 

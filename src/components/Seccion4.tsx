@@ -1,4 +1,3 @@
-// Seccion4.tsx
 import React, { useState, useEffect } from 'react';
 import { FiPackage, FiArrowRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';

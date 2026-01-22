@@ -9,10 +9,8 @@ import Seccion4 from '../components/Seccion4';
 import Seccion5 from '../components/Seccion5';
 import Seccion6 from '../components/Seccion6';
 import Seccion7 from '../components/Seccion7';
-import Seccion8 from '../components/Seccion8';
 
 import api from '../api';
-import DashsboardHighlights from '../components/DashboardHighlights';
 
 const AdminDashboard: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -28,7 +26,6 @@ const AdminDashboard: React.FC = () => {
           navigate('/login');
         }
       } catch (error) {
-        console.error('Error al obtener la información del usuario:', error);
         navigate('/login');
       }
     };
@@ -55,10 +52,9 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Resto del código permanece igual */}
             {/* Metric Cards */}
             <div className="px-4 mb-8">
-              <DashsboardHighlights />
+              <DasboardHighlights />
             </div>
 
             {/* Main Content Grid */}
