@@ -260,26 +260,30 @@ const HistoricoMonitoreo: React.FC = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <>
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       <div className="flex h-full">
         <Sidebar />
-        
+
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <HeaderDashboard title="Monitoreo Histórico" />
-          
+
           <main className="flex-1 overflow-y-auto">
             <div className="w-full p-8 2xl:px-12">
               <div className="max-w-9xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out">
+                <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 transition-all duration-300 ease-in-out">
                   <div className="px-8 py-6 border-b border-gray-100">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                           {producto?.nombre_producto || "Cargando..."}
                         </h1>
-                        <div className="text-sm text-gray-500 mt-1">
+                        <div className="text-sm text-gray-500 mt-2 flex items-center gap-2">
+                          <span className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
                           <p>Datos registrados: {fullData.length}</p>
-                          <p>Datos maximos mostrados: 100</p>
+                          <span className="mx-1">•</span>
+                          <p>Datos máximos mostrados: 100</p>
+                          <span className="mx-1">•</span>
                           <p>Estado: {monitoreoActivo ? "Activo" : "Completado"}</p>
                         </div>
                         {dateError && (
@@ -288,7 +292,7 @@ const HistoricoMonitoreo: React.FC = () => {
                           </Alert>
                         )}
                       </div>
-                      
+
                       <div className="w-full md:w-auto flex flex-col gap-2">
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                           <div className="flex gap-2 flex-wrap items-center">
@@ -322,14 +326,14 @@ const HistoricoMonitoreo: React.FC = () => {
                               variant="outlined"
                               onClick={() => {
                                 if (producto) {
-                                  const newEnd = monitoreoActivo ? new Date() : 
-                                    producto.fecha_finalizacion_monitoreo 
+                                  const newEnd = monitoreoActivo ? new Date() :
+                                    producto.fecha_finalizacion_monitoreo
                                       ? new Date(producto.fecha_finalizacion_monitoreo)
                                       : new Date();
-                                  
+
                                   const newStart = new Date(newEnd);
                                   newStart.setDate(newEnd.getDate() - 7);
-                                  
+
                                   setStartDate(newStart);
                                   setEndDate(newEnd);
                                   setDateError(null);
@@ -515,6 +519,25 @@ const HistoricoMonitoreo: React.FC = () => {
         </div>
       </div>
     </div>
+
+    <style>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+      }
+    `}</style>
+    </>
   );
 };
 

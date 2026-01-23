@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaLock, FaUserTag, FaCamera, FaTimes } from 'react-icons/fa';
 import { Alert, Button, TextField, MenuItem, InputAdornment, IconButton, CircularProgress } from '@mui/material';
 import api from '../api';
@@ -19,7 +19,12 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
   const [success, setSuccess] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -90,29 +95,46 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="flex h-full">
-        <Sidebar />
-        
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <HeaderDashboard title="Agregar Usuario" />
-          
-          <main className="flex-1 overflow-y-auto">
-            <div className="w-full p-8 2xl:px-12">
-              <div className="max-w-9xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out">
-                  <div className="px-8 py-6 border-b border-gray-100">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
-                          Nuevo Usuario
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Completa todos los campos para registrar un nuevo usuario
-                        </p>
-                      </div>
-                    </div>
+    <>
+      <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <HeaderDashboard title="Agregar Usuario" />
+
+        <main className="flex-1 overflow-y-auto">
+          <div className={`max-w-7xl mx-auto p-8 transition-all duration-700 ease-out ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}>
+            {/* Header Section */}
+            <div className="mb-8 animate-fade-in-down">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 p-8 overflow-hidden">
+                {/* Animated background decoration */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-400/10 to-blue-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+                <div className="relative">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-full mb-4 animate-fade-in">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-semibold text-blue-700">Gestión de Usuarios</span>
                   </div>
+
+                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-3 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                    Nuevo
+                    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-shift ml-2">
+                      Usuario
+                    </span>
+                  </h1>
+                  <p className="text-base text-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                    Completa todos los campos para registrar un nuevo usuario
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Card */}
+            <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="p-8">
                   
                   <div className="p-6 lg:p-8">
                     <form onSubmit={handleSubmit} className="space-y-8">
@@ -120,17 +142,17 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                         {/* Sección Foto */}
                         <div className="w-full lg:w-1/3 flex flex-col items-center">
                           <div className="relative group w-full">
-                            <label 
+                            <label
                               htmlFor="image-upload"
-                              className="w-full aspect-square rounded-xl bg-gray-50 flex items-center justify-center cursor-pointer 
-                                transition-all duration-300 hover:bg-gray-100 border-2 border-dashed border-blue-200
-                                overflow-hidden shadow-sm hover:shadow-md relative"
+                              className="w-full aspect-square rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center cursor-pointer
+                                transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-dashed border-blue-200 hover:border-blue-300
+                                overflow-hidden shadow-sm relative group"
                             >
                               {preview ? (
                                 <>
-                                  <img 
-                                    src={preview} 
-                                    alt="Vista previa del usuario" 
+                                  <img
+                                    src={preview}
+                                    alt="Vista previa del usuario"
                                     className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
                                   />
                                   <IconButton
@@ -142,13 +164,15 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                                 </>
                               ) : (
                                 <div className="text-center p-4 space-y-2">
-                                  <FaCamera className="text-3xl text-blue-400 mb-2 mx-auto transition-colors" />
-                                  <span className="text-sm text-gray-500 group-hover:text-blue-600 transition-colors">
+                                  <div className="inline-flex p-4 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full shadow-sm">
+                                    <FaCamera className="text-3xl text-blue-600 transition-colors" />
+                                  </div>
+                                  <span className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors font-medium">
                                     Subir foto de perfil
                                   </span>
                                 </div>
                               )}
-                              <div className="absolute inset-0 ring-1 ring-inset ring-gray-200/50 rounded-xl" />
+                              <div className="absolute inset-0 ring-1 ring-inset ring-blue-100/50 rounded-xl" />
                             </label>
                             <input
                               id="image-upload"
@@ -179,8 +203,13 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                               sx={{
                                 '& .MuiOutlinedInput-root': {
                                   borderRadius: '12px',
-                                  '&:hover fieldset': {
-                                    borderColor: '#2563eb',
+                                  transition: 'all 0.2s ease',
+                                  '&:hover': {
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)',
+                                  },
+                                  '&.Mui-focused': {
+                                    boxShadow: '0 0 0 4px rgba(37, 99, 235, 0.1)',
                                   },
                                 }
                               }}
@@ -204,8 +233,13 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                               sx={{
                                 '& .MuiOutlinedInput-root': {
                                   borderRadius: '12px',
-                                  '&:hover fieldset': {
-                                    borderColor: '#2563eb',
+                                  transition: 'all 0.2s ease',
+                                  '&:hover': {
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)',
+                                  },
+                                  '&.Mui-focused': {
+                                    boxShadow: '0 0 0 4px rgba(37, 99, 235, 0.1)',
                                   },
                                 }
                               }}
@@ -230,8 +264,13 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                               sx={{
                                 '& .MuiOutlinedInput-root': {
                                   borderRadius: '12px',
-                                  '&:hover fieldset': {
-                                    borderColor: '#2563eb',
+                                  transition: 'all 0.2s ease',
+                                  '&:hover': {
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)',
+                                  },
+                                  '&.Mui-focused': {
+                                    boxShadow: '0 0 0 4px rgba(37, 99, 235, 0.1)',
                                   },
                                 }
                               }}
@@ -256,8 +295,13 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                               sx={{
                                 '& .MuiOutlinedInput-root': {
                                   borderRadius: '12px',
-                                  '&:hover fieldset': {
-                                    borderColor: '#2563eb',
+                                  transition: 'all 0.2s ease',
+                                  '&:hover': {
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)',
+                                  },
+                                  '&.Mui-focused': {
+                                    boxShadow: '0 0 0 4px rgba(37, 99, 235, 0.1)',
                                   },
                                 }
                               }}
@@ -309,19 +353,28 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
                             <Button
                               type="submit"
                               variant="contained"
-                              color="primary"
                               fullWidth
                               size="large"
                               disabled={isSubmitting}
                               sx={{
-                                height: '50px',
-                                borderRadius: '12px',
+                                height: '56px',
+                                borderRadius: '14px',
                                 textTransform: 'none',
                                 fontSize: '16px',
                                 fontWeight: 600,
-                                background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
+                                background: 'linear-gradient(135deg, #2563eb 0%, #0891b2 100%)',
+                                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)',
+                                transition: 'all 0.3s ease',
                                 '&:hover': {
-                                  background: 'linear-gradient(to right, #1d4ed8, #1e40af)',
+                                  background: 'linear-gradient(135deg, #1d4ed8 0%, #0e7490 100%)',
+                                  boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                                  transform: 'translateY(-2px)',
+                                },
+                                '&:active': {
+                                  transform: 'translateY(0)',
+                                },
+                                '&:disabled': {
+                                  background: 'linear-gradient(135deg, #94a3b8 0%, #64748b 100%)',
                                 }
                               }}
                             >
@@ -367,7 +420,68 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
           </main>
         </div>
       </div>
-    </div>
+
+      <style>{`
+        @keyframes fade-in-down {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes gradient-shift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .animate-fade-in-down {
+          animation: fade-in-down 0.6s ease-out forwards;
+        }
+
+        .animate-fade-in-up {
+          opacity: 0;
+          animation: fade-in-up 0.6s ease-out forwards;
+        }
+
+        .animate-fade-in {
+          opacity: 0;
+          animation: fade-in 0.5s ease-out forwards;
+        }
+
+        .animate-gradient-shift {
+          background-size: 200% 200%;
+          animation: gradient-shift 5s ease infinite;
+        }
+      `}</style>
+    </>
   );
 };
 

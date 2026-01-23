@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   FiBell,
   FiUser,
@@ -47,6 +47,23 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
   });
 
   const navigate = useNavigate();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Obtener datos del usuario autenticado
   useEffect(() => {
@@ -119,106 +136,127 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
     );
 
   return (
-    <header className="bg-blue-600 text-white shadow-sm px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between h-16">
-        {/* Título */}
-        <h1 className="text-xl font-semibold truncate">{title}</h1>
+    <header className="bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg sticky top-0 z-40 animate-fade-in-down">
+      <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+        {/* Título con gradiente */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:block">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-shift">
+              {title}
+            </h1>
+          </div>
+          <div className="sm:hidden">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-shift">
+              {title}
+            </h1>
+          </div>
+        </div>
 
         {/* Controles Derecha */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Notificaciones */}
-          <div className="relative">
+          <div className="relative" ref={notificationsRef}>
             <button
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-              className="p-2 rounded-lg hover:bg-blue-700 relative transition-colors"
+              className="group relative p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 hover:scale-105 hover:shadow-md"
             >
-              <FiBell className="w-5 h-5" />
+              <FiBell className="w-5 h-5 text-blue-600 group-hover:animate-bounce" />
               {alertasActivas.length > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse shadow-lg">
                   {alertasActivas.length > 9 ? '9+' : alertasActivas.length}
                 </span>
               )}
             </button>
 
-            {/* Dropdown Notificaciones */}
+            {/* Dropdown Notificaciones con glassmorphism */}
             {isNotificationsOpen && (
-              <div className="absolute right-0 mt-2 w-96 origin-top-right bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2 text-black">
-                      <FiAlertCircle className="text-red-500" /> Alertas Activas
-                      <span className="text-sm font-normal text-gray-500">
-                        ({alertasActivas.length})
-                      </span>
-                    </h3>
+              <div className="absolute right-0 mt-3 w-96 sm:w-[420px] origin-top-right animate-scale-in">
+                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+                  {/* Header con gradiente */}
+                  <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold flex items-center gap-2 text-white">
+                        <FiAlertCircle className="animate-pulse" /> Alertas Activas
+                        <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-sm">
+                          {alertasActivas.length}
+                        </span>
+                      </h3>
+                    </div>
                   </div>
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {alertasActivas.slice(0, 10).map(alerta => {
-                      const producto = getProducto(alerta.id_producto_monitoreado);
-                      return (
-                        <Link
-                          to="/VerAlertas"
-                          key={alerta.id}
-                          className="group block hover:bg-gray-50 rounded-lg p-2 transition-colors"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="w-2 h-14 rounded-full bg-red-500" />
-                            <div className="flex-1 flex justify-between items-start gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className="font-medium text-sm text-gray-900">
+
+                  <div className="p-4 max-h-[450px] overflow-y-auto">
+                    <div className="space-y-3">
+                      {alertasActivas.slice(0, 10).map((alerta, index) => {
+                        const producto = getProducto(alerta.id_producto_monitoreado);
+                        return (
+                          <Link
+                            to="/VerAlertas"
+                            key={alerta.id}
+                            className="group block bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-cyan-50 rounded-xl p-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg border border-gray-100 hover:border-blue-200"
+                            style={{ animationDelay: `${index * 0.05}s` }}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="w-1.5 h-14 rounded-full bg-gradient-to-b from-red-500 to-pink-500 animate-pulse" />
+                              <div className="flex-1 flex justify-between items-start gap-3">
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-semibold text-sm text-gray-900 mb-1 truncate group-hover:text-blue-600 transition-colors">
                                     {alerta.mensaje}
                                   </h4>
+                                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                                    <FiMapPin className="flex-shrink-0 text-cyan-600" />
+                                    <span className="truncate">{producto.localizacion}</span>
+                                  </div>
+                                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                                    <div className="flex items-center gap-1">
+                                      <FiThermometer className="text-blue-500" />
+                                      <span>
+                                        Límites: {alerta.limite_min} - {alerta.limite_max}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-500">
-                                  <FiMapPin className="flex-shrink-0 text-gray-400" />
-                                  <span>{producto.localizacion}</span>
-                                </div>
-                                <div className="mt-1 flex items-center gap-4 text-xs text-gray-400">
-                                  <div className="flex items-center gap-1">
-                                    <FiThermometer className="text-blue-500" />
-                                    <span>
-                                      Límites: {alerta.limite_min} -{' '}
-                                      {alerta.limite_max}
-                                    </span>
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  <div className="text-right">
+                                    <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600">
+                                      {alerta.valor_medido.toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-gray-400">
+                                      {formatDate(alerta.fecha_generacion)}
+                                    </p>
+                                  </div>
+                                  <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden ring-2 ring-blue-100 hover:ring-blue-300 transition-all">
+                                    <img
+                                      src={producto.foto_producto}
+                                      alt="Producto"
+                                      className="w-full h-full object-cover"
+                                    />
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                  <p className="text-sm font-semibold text-red-600">
-                                    {alerta.valor_medido.toFixed(2)}
-                                  </p>
-                                  <p className="text-xs text-gray-400">
-                                    {formatDate(alerta.fecha_generacion)}
-                                  </p>
-                                </div>
-                                <div className="w-12 h-12 flex-shrink-0">
-                                  <img
-                                    src={producto.foto_producto}
-                                    alt="Producto"
-                                    className="w-full h-full rounded-lg object-cover border border-gray-200"
-                                  />
-                                </div>
-                              </div>
                             </div>
+                          </Link>
+                        );
+                      })}
+                      {alertasActivas.length === 0 && (
+                        <div className="text-center py-8">
+                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-green-50 to-emerald-50 mb-3">
+                            <FiAlertCircle className="w-8 h-8 text-green-500" />
                           </div>
-                        </Link>
-                      );
-                    })}
-                    {alertasActivas.length === 0 && (
-                      <div className="text-center py-4 text-gray-500">
-                        No hay alertas activas
-                      </div>
-                    )}
+                          <p className="text-gray-500 font-medium">No hay alertas activas</p>
+                          <p className="text-sm text-gray-400 mt-1">Todo está funcionando correctamente</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
                   {alertasActivas.length > 0 && (
-                    <div className="mt-4 border-t border-gray-200 pt-2">
+                    <div className="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border-t border-blue-100">
                       <Link
                         to="/VerAlertas"
-                        className="text-blue-600 text-sm hover:underline flex items-center justify-center"
+                        className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-cyan-700 flex items-center justify-center transition-all duration-300 group"
                       >
-                        Ver todas las alertas <FiChevronRight className="ml-1" />
+                        Ver todas las alertas
+                        <FiChevronRight className="ml-1 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
                   )}
@@ -228,52 +266,80 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
           </div>
 
           {/* Menú Usuario */}
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 p-1.5 pr-3 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition-all duration-300 hover:scale-105 hover:shadow-md group"
             >
-              <img
-                src={userData.foto}
-                alt="Usuario"
-                className="w-8 h-8 rounded-full border border-white"
-              />
+              <div className="relative">
+                <img
+                  src={userData.foto}
+                  alt="Usuario"
+                  className="w-8 h-8 rounded-full ring-2 ring-white shadow-md group-hover:ring-blue-300 transition-all"
+                />
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              <div className="hidden sm:block text-left">
+                <p className="text-xs font-semibold text-gray-700">{userData.nombre}</p>
+                <p className="text-xs text-gray-500">{userData.rol}</p>
+              </div>
               <FiChevronDown
-                className={`w-4 h-4 transition-transform ${
+                className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${
                   isMenuOpen ? 'rotate-180' : ''
                 }`}
               />
             </button>
+
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                <div className="py-2">
-                  <div className="px-4 py-2 border-b">
-                    <p className="text-sm font-semibold text-black">
-                      {userData.nombre} {userData.apellido}
-                    </p>
-                    <p className="text-xs text-gray-500">{userData.rol}</p>
+              <div className="absolute right-0 mt-3 w-56 origin-top-right animate-scale-in">
+                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+                  {/* User Info Header */}
+                  <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={userData.foto}
+                        alt="Usuario"
+                        className="w-12 h-12 rounded-full ring-2 ring-white/50"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-white truncate">
+                          {userData.nombre} {userData.apellido}
+                        </p>
+                        <p className="text-xs text-blue-100 truncate">{userData.rol}</p>
+                      </div>
+                    </div>
                   </div>
-                  <Link
-                    to="/perfil"
-                    className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50"
-                  >
-                    <FiUser className="w-4 h-4 mr-3 text-blue-600" />
-                    <span>Perfil</span>
-                  </Link>
-                  <Link
-                    to="/configuracion"
-                    className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50"
-                  >
-                    <FiSettings className="w-4 h-4 mr-3 text-blue-600" />
-                    <span>Configuración</span>
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50"
-                  >
-                    <FiLogOut className="w-4 h-4 mr-3 text-blue-600" />
-                    <span>Cerrar sesión</span>
-                  </button>
+
+                  <div className="py-2">
+                    <Link
+                      to="/perfil"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 transition-all duration-300 group"
+                    >
+                      <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 group-hover:scale-110 transition-transform mr-3">
+                        <FiUser className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <span className="font-medium">Perfil</span>
+                    </Link>
+                    <Link
+                      to="/configuracion"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-all duration-300 group"
+                    >
+                      <div className="p-2 rounded-lg bg-gradient-to-br from-purple-100 to-blue-100 group-hover:scale-110 transition-transform mr-3">
+                        <FiSettings className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <span className="font-medium">Configuración</span>
+                    </Link>
+                    <div className="border-t border-gray-100 my-1"></div>
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-300 group"
+                    >
+                      <div className="p-2 rounded-lg bg-gradient-to-br from-red-100 to-pink-100 group-hover:scale-110 transition-transform mr-3">
+                        <FiLogOut className="w-4 h-4 text-red-600" />
+                      </div>
+                      <span className="font-medium">Cerrar sesión</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -285,3 +351,56 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
 };
 
 export default HeaderDashboard;
+
+// Custom animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-fade-in-down {
+    animation: fade-in-down 0.5s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+`;
+
+if (!document.head.querySelector('style[data-header-animations]')) {
+  style.setAttribute('data-header-animations', 'true');
+  document.head.appendChild(style);
+}

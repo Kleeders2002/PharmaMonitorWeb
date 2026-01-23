@@ -101,18 +101,41 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
     return (
       <Box
         display="flex"
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
         minHeight="200px"
+        gap={2}
+        sx={{
+          background: 'linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(248,250,252,0.8))',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '20px',
+          p: 4,
+        }}
       >
-        <CircularProgress />
+        <CircularProgress
+          sx={{
+            color: '#667eea',
+          }}
+        />
+        <Typography variant="body2" color="textSecondary" fontWeight={500}>
+          Cargando condiciones...
+        </Typography>
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ mb: 2 }}>
+      <Alert
+        severity="error"
+        sx={{
+          mb: 2,
+          borderRadius: '16px',
+          boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)',
+          border: '2px solid rgba(239, 68, 68, 0.2)',
+        }}
+      >
         {error}
       </Alert>
     );
@@ -131,19 +154,25 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 1,
-          p: 1.5,
+          gap: 1.5,
+          p: 2,
           bgcolor: `${color}10`,
-          borderRadius: 2,
-          border: `1px solid ${color}30`,
+          borderRadius: 3,
+          border: `2px solid ${color}30`,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: `0 8px 20px ${color}30`,
+            borderColor: color,
+          },
         }}
       >
-        <Box sx={{ color, fontSize: 24 }}>{icon}</Box>
+        <Box sx={{ color, fontSize: 28 }}>{icon}</Box>
         <Box sx={{ flex: 1 }}>
-          <Typography variant="caption" color="textSecondary" display="block">
+          <Typography variant="caption" color="textSecondary" display="block" fontWeight={600}>
             {label}
           </Typography>
-          <Typography variant="body2" fontWeight="600">
+          <Typography variant="body2" fontWeight="700" color="textPrimary">
             {min} - {max} {unit}
           </Typography>
         </Box>
@@ -155,18 +184,25 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
     <Card
       sx={{
         border: "2px solid #667eea",
-        boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
-        background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)",
+        boxShadow: "0 8px 24px rgba(102, 126, 234, 0.25)",
+        background: "linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%)",
+        backdropFilter: 'blur(20px)',
+        borderRadius: '20px',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: "0 12px 32px rgba(102, 126, 234, 0.35)",
+        },
       }}
     >
       <CardContent>
-        <Typography variant="h6" fontWeight="600" gutterBottom>
+        <Typography variant="h6" fontWeight="700" gutterBottom sx={{ color: '#667eea' }}>
           {condition.nombre}
-          <Typography component="span" variant="caption" color="textSecondary" sx={{ ml: 2 }}>
+          <Typography component="span" variant="caption" color="textSecondary" sx={{ ml: 2, fontWeight: 500 }}>
             ID: {condition.id}
           </Typography>
         </Typography>
-        <Typography variant="subtitle2" color="primary" sx={{ mb: 2 }}>
+        <Typography variant="subtitle2" sx={{ mb: 3, color: '#764ba2', fontWeight: 600 }}>
           Condición Seleccionada
         </Typography>
         <Grid container spacing={2}>
@@ -214,10 +250,10 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mb: 3,
+          mb: 4,
         }}
       >
-        <Typography variant="h6" fontWeight="600">
+        <Typography variant="h6" fontWeight="700" sx={{ color: '#667eea' }}>
           Condiciones de Almacenamiento
         </Typography>
         <Button
@@ -229,11 +265,15 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
             textTransform: "none",
             fontWeight: 600,
             px: 3,
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            py: 1.5,
+            borderRadius: '14px',
+            boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
             "&:hover": {
-              boxShadow: "0 6px 8px rgba(0,0,0,0.15)",
-              transform: "translateY(-1px)",
+              boxShadow: "0 8px 20px rgba(102, 126, 234, 0.4)",
+              transform: "translateY(-2px)",
+              background: "linear-gradient(135deg, #5568d3 0%, #64418a 100%)",
             },
+            transition: 'all 0.3s ease',
           }}
         >
           Nueva Condición
@@ -241,16 +281,52 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
       </Box>
 
       {condiciones.length === 0 ? (
-        <Card>
-          <CardContent sx={{ textAlign: "center", py: 4 }}>
-            <Typography variant="body1" color="textSecondary">
+        <Card
+          sx={{
+            borderRadius: '20px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            background: 'linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(248,250,252,0.8))',
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          <CardContent sx={{ textAlign: "center", py: 6 }}>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                mx: 'auto',
+                mb: 3,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <FaPlus style={{ fontSize: 32, color: '#667eea' }} />
+            </Box>
+            <Typography variant="body1" color="textSecondary" fontWeight={500} mb={2}>
               No hay condiciones registradas
             </Typography>
             <Button
               variant="outlined"
               startIcon={<FaPlus />}
               onClick={handleCreateNew}
-              sx={{ mt: 2 }}
+              sx={{
+                mt: 2,
+                borderRadius: '12px',
+                fontWeight: 600,
+                px: 3,
+                borderColor: '#667eea',
+                color: '#667eea',
+                '&:hover': {
+                  borderColor: '#764ba2',
+                  backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.2)',
+                },
+                transition: 'all 0.3s ease',
+              }}
             >
               Crear Primera Condición
             </Button>
@@ -259,20 +335,44 @@ const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
       ) : (
         <>
           {/* Dropdown para seleccionar condición */}
-          <Card sx={{ mb: 3 }}>
+          <Card
+            sx={{
+              mb: 3,
+              borderRadius: '16px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+              background: 'linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(248,250,252,0.8))',
+              backdropFilter: 'blur(20px)',
+            }}
+          >
             <CardContent>
               <FormControl fullWidth>
-                <InputLabel>Seleccionar Condición</InputLabel>
+                <InputLabel sx={{ fontWeight: 600 }}>Seleccionar Condición</InputLabel>
                 <Select
                   value={selectedDropdownValue}
                   label="Seleccionar Condición"
                   onChange={handleDropdownChange}
+                  sx={{
+                    borderRadius: '12px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#667eea',
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value="">
                     <em>Seleccione una condición...</em>
                   </MenuItem>
                   {condiciones.map((cond) => (
-                    <MenuItem key={cond.id} value={cond.id?.toString() || ""}>
+                    <MenuItem
+                      key={cond.id}
+                      value={cond.id?.toString() || ""}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        },
+                      }}
+                    >
                       {cond.nombre}
                     </MenuItem>
                   ))}

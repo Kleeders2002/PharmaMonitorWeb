@@ -345,10 +345,9 @@ const ConsultarProductos: React.FC = () => {
         <div className="flex justify-center items-center w-full h-full">
           <Button
             variant="contained"
-            color="primary"
             size="small"
             startIcon={<FaEdit />}
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-lg"
             onClick={() => handleEdit(params.row.id)}
           >
             Editar
@@ -369,10 +368,9 @@ const ConsultarProductos: React.FC = () => {
               <span>
                 <Button
                   variant="contained"
-                  color="error"
                   size="small"
                   startIcon={<FaTrashAlt />}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isRelated}
                   onClick={() => !isRelated && handleClickOpenDelete(params.row.id)}
                 >
@@ -387,7 +385,8 @@ const ConsultarProductos: React.FC = () => {
   ];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <>
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       <div className="flex h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -395,14 +394,15 @@ const ConsultarProductos: React.FC = () => {
           <main className="flex-1 overflow-y-auto">
             <div className="w-full p-8 2xl:px-12">
               <div className="max-w-9xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out">
+                <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 transition-all duration-300 ease-in-out">
                   <div className="px-8 py-6 border-b border-gray-100">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                           Consulta de Productos
                         </h1>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
+                          <span className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
                           {filteredProductos.length} resultados encontrados
                         </p>
                       </div>
@@ -421,11 +421,14 @@ const ConsultarProductos: React.FC = () => {
                               </InputAdornment>
                             ),
                             className:
-                              "bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow",
+                              "bg-white/80 backdrop-blur rounded-xl shadow-sm hover:shadow-md transition-all duration-300",
                             sx: {
                               borderRadius: "1rem",
                               "&:hover .MuiOutlinedInput-notchedOutline": {
                                 borderColor: "#3b82f6",
+                              },
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#e2e8f0",
                               },
                             },
                           }}
@@ -436,17 +439,20 @@ const ConsultarProductos: React.FC = () => {
                   <div className="p-6 lg:p-8">
                     {loading ? (
                       <div className="flex justify-center items-center min-h-[500px]">
-                        <CircularProgress
-                          size={80}
-                          thickness={2.5}
-                          className="text-blue-600"
-                          sx={{ animationDuration: "800ms" }}
-                        />
+                        <div className="text-center">
+                          <CircularProgress
+                            size={80}
+                            thickness={2.5}
+                            className="text-blue-600"
+                            sx={{ animationDuration: "800ms" }}
+                          />
+                          <p className="mt-4 text-gray-600 font-medium animate-pulse">Cargando productos...</p>
+                        </div>
                       </div>
                     ) : error ? (
                       <Alert
                         severity="error"
-                        className="rounded-xl border-l-4 border-red-600 bg-red-50"
+                        className="rounded-xl border-l-4 border-red-600 bg-red-50 backdrop-blur-sm"
                         icon={<FaExclamationTriangle className="mt-1" />}
                       >
                         <Typography variant="body1" className="font-semibold text-red-800">
@@ -457,7 +463,7 @@ const ConsultarProductos: React.FC = () => {
                         </Typography>
                       </Alert>
                     ) : (
-                      <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                      <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                         <DataGrid
                           rows={filteredProductos}
                           columns={columns}
@@ -501,9 +507,12 @@ const ConsultarProductos: React.FC = () => {
                               },
                             },
                             "& .MuiDataGrid-row": {
-                              transition: "background-color 0.2s",
+                              transition: "all 0.2s ease",
+                              animation: "fadeInUp 0.3s ease-out",
                               "&:hover": {
-                                backgroundColor: "#f8fafc",
+                                backgroundColor: "rgba(59, 130, 246, 0.04)",
+                                transform: "scale(1.01)",
+                                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                               },
                             },
                             "& .MuiDataGrid-virtualScroller": {
@@ -613,6 +622,20 @@ const ConsultarProductos: React.FC = () => {
         </div>
       </div>
     </div>
+
+    <style>{`
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `}</style>
+    </>
   );
 };
 

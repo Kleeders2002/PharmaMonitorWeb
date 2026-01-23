@@ -337,54 +337,55 @@ const DashboardMonitoreo: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <>
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       <div className="flex h-full">
         <Sidebar />
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <HeaderDashboard title="Monitor de Condiciones Ambientales" />
-          
+
           <main className="flex-1 overflow-y-auto">
             <div className="w-full p-8 2xl:px-12">
               <div className="max-w-9xl mx-auto space-y-6">
                 <Tabs
                   value={tabValue}
                   onChange={(_, newValue) => setTabValue(newValue)}
-                  sx={{ 
+                  sx={{
                     '& .MuiTabs-indicator': { backgroundColor: '#3b82f6' },
                     '& .Mui-selected': { color: '#1e40af !important' }
                   }}
                 >
-                  <Tab 
-                    label={`Monitoreo Activo (${activeProducts.length})`} 
-                    icon={<FiBox className="text-blue-600" />} 
+                  <Tab
+                    label={`Monitoreo Activo (${activeProducts.length})`}
+                    icon={<FiBox className="text-blue-600" />}
                     iconPosition="start"
                   />
-                  <Tab 
-                    label={`Histórico (${historicalProducts.length})`} 
-                    icon={<FiArchive className="text-gray-600" />} 
+                  <Tab
+                    label={`Histórico (${historicalProducts.length})`}
+                    icon={<FiArchive className="text-gray-600" />}
                     iconPosition="start"
                   />
                 </Tabs>
 
                 {tabValue === 0 ? (
-                  <div className="bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out">
+                  <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 transition-all duration-300 ease-in-out">
                     <div className="px-8 py-6 border-b border-gray-100">
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div className="flex-1">
-                          <h1 className="text-2xl font-bold text-gray-900">
+                          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                             Monitoreo en Tiempo Real
                           </h1>
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
+                            <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                             {selectedProduct &&
                               `Última actualización: ${format(new Date(), "d MMM yyyy HH:mm:ss", { locale: es })}`}
                           </p>
                         </div>
-                        
+
                         <div className="flex flex-col md:flex-row gap-4 items-end w-full md:w-auto">
                           <div className="flex gap-4">
                             <Button
                               variant="contained"
-                              color="error"
                               startIcon={<FiStopCircle />}
                               onClick={handleStopMonitoring}
                               disabled={!selectedProduct || isStopping}
@@ -392,6 +393,10 @@ const DashboardMonitoreo: React.FC = () => {
                                 height: '56px',
                                 minWidth: '180px',
                                 order: { xs: 0, md: 0 },
+                                background: 'linear-gradient(to right, #ef4444, #dc2626)',
+                                '&:hover': {
+                                  background: 'linear-gradient(to right, #dc2626, #b91c1c)',
+                                },
                               }}
                             >
                               {isStopping ? 'Deteniendo...' : 'Detener Monitoreo'}
@@ -399,7 +404,6 @@ const DashboardMonitoreo: React.FC = () => {
 
                             <Button
                               variant="outlined"
-                              color="primary"
                               startIcon={<FiClock />}
                               onClick={() => navigate(`/HistoricoMonitoreo/${selectedProduct}`)}
                               disabled={!selectedProduct}
@@ -428,8 +432,8 @@ const DashboardMonitoreo: React.FC = () => {
                               {activeProducts.map((producto) => (
                                 <MenuItem key={producto.id} value={producto.id}>
                                   <div className="flex items-center gap-3 w-full">
-                                    <Avatar 
-                                      src={producto.foto_producto} 
+                                    <Avatar
+                                      src={producto.foto_producto}
                                       sx={{ width: 40, height: 40 }}
                                     />
                                     <div>
@@ -554,7 +558,7 @@ const DashboardMonitoreo: React.FC = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl shadow-xl p-6">
+                  <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 p-6">
   <div className="mb-6 flex items-center justify-between">
     <div>
       <Typography variant="h5" className="font-bold text-gray-800">
@@ -568,9 +572,9 @@ const DashboardMonitoreo: React.FC = () => {
   </div>
 
   <Grid container spacing={3}>
-    {historicalProducts.map((producto) => (
+    {historicalProducts.map((producto, index) => (
       <Grid item xs={12} md={6} lg={4} key={producto.id}>
-        <Card className="group relative h-full p-4 transition-all hover:shadow-lg hover:border-blue-100 hover:border-2">
+        <Card className="group relative h-full p-4 transition-all hover:shadow-xl hover:border-blue-100 hover:border-2 animate-fadeIn" sx={{ animationDelay: `${index * 0.05}s` }}>
           <div className="flex gap-4">
             <Avatar
               src={producto.foto_producto}
@@ -664,6 +668,25 @@ const DashboardMonitoreo: React.FC = () => {
         </div>
       </div>
     </div>
+
+    <style>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+      }
+    `}</style>
+    </>
   );
 };
 
