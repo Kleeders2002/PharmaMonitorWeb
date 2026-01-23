@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
 import DasboardHighlights from '../components/DashboardHighlights';
-import Seccion2 from '../components/Seccion2';
-import Seccion3 from '../components/Seccion3';
-import Seccion4 from '../components/Seccion4';
-import Seccion5 from '../components/Seccion5';
-import Seccion6 from '../components/Seccion6';
+import GraficoMonitoreo from '../components/GraficoMonitoreo';
+import AlertasActivas from '../components/AlertasActivas';
+import UltimosProductos from '../components/UltimosProductos';
+import ActividadReciente from '../components/ActividadReciente';
+import InformacionSistema from '../components/InformacionSistema';
 
 import api from '../api';
 
@@ -59,13 +59,13 @@ const AdminDashboard: React.FC = () => {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-4">
               <div className="xl:col-span-2">
-                <Seccion2 />
+                <GraficoMonitoreo />
               </div>
-              <Seccion3 />
-              <Seccion4 />
-              <Seccion5 />
+              <AlertasActivas />
+              <UltimosProductos />
+              <ActividadReciente />
               <div className="xl:col-span-3">
-                <Seccion6 />
+                <InformacionSistema />
               </div>
             </div>
           </div>
