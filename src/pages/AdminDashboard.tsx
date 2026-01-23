@@ -8,7 +8,6 @@ import Seccion3 from '../components/Seccion3';
 import Seccion4 from '../components/Seccion4';
 import Seccion5 from '../components/Seccion5';
 import Seccion6 from '../components/Seccion6';
-import Seccion7 from '../components/Seccion7';
 
 import api from '../api';
 
@@ -65,7 +64,6 @@ const AdminDashboard: React.FC = () => {
               <Seccion3 />
               <Seccion4 />
               <Seccion5 />
-              <Seccion7 />
               <div className="xl:col-span-3">
                 <Seccion6 />
               </div>
