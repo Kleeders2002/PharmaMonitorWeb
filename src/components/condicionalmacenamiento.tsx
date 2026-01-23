@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
   Button,
+  CircularProgress,
+  Alert,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  TextField,
-  Grid,
-  DialogActions,
-  IconButton,
-  Typography,
-  Divider,
-  useTheme,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { FaTimes } from "react-icons/fa";
+import {
+  FiThermometer,
+  FiDroplet,
+  FiSun,
+} from "react-icons/fi";
+import { FaPlus, FaWeight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 export interface CondicionAlmacenamiento {
   id?: number;
@@ -32,283 +35,260 @@ export interface CondicionAlmacenamiento {
   presion_max: string;
 }
 
-interface CondicionAlmacenamientoDialogProps {
-  open: boolean;
-  onClose: () => void;
-  existingConditions: CondicionAlmacenamiento[];
-  selectedConditionId: string;
-  handleSelectCondition: (e: SelectChangeEvent<string>) => void;
-  handleAddCondition: () => Promise<void>;
-  condiciones: CondicionAlmacenamiento;
-  handleCondicionesChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+interface CondicionListProps {
+  onSelectCondition?: (condicion: CondicionAlmacenamiento) => void;
+  selectedConditionId?: string;
 }
 
-const CondicionAlmacenamientoDialog: React.FC<CondicionAlmacenamientoDialogProps> = ({
-  open,
-  onClose,
-  existingConditions,
+const CondicionAlmacenamientoList: React.FC<CondicionListProps> = ({
+  onSelectCondition,
   selectedConditionId,
-  handleSelectCondition,
-  handleAddCondition,
-  condiciones,
-  handleCondicionesChange,
 }) => {
-  const theme = useTheme();
-  const isEditingExisting = selectedConditionId !== "";
+  const [condiciones, setCondiciones] = useState<CondicionAlmacenamiento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState<string>("");
+  const navigate = useNavigate();
 
-  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <Typography variant="subtitle1" fontWeight="600" mt={2} mb={1}>
-      {children}
-    </Typography>
+  useEffect(() => {
+    const fetchCondiciones = async () => {
+      try {
+        const response = await api.get<CondicionAlmacenamiento[]>("/condiciones/");
+        setCondiciones(response.data);
+        setError(null);
+      } catch (err) {
+        setError("Error al cargar las condiciones de almacenamiento");
+        console.error("Error fetching condiciones:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCondiciones();
+  }, []);
+
+  useEffect(() => {
+    // Sincronizar con el selectedConditionId externo
+    if (selectedConditionId) {
+      setSelectedDropdownValue(selectedConditionId);
+    }
+  }, [selectedConditionId]);
+
+  const handleCreateNew = () => {
+    navigate("/AgregarCondicionAmbiental");
+  };
+
+  const handleDropdownChange = (event: any) => {
+    const value = event.target.value;
+    setSelectedDropdownValue(value);
+
+    if (value && onSelectCondition) {
+      const selected = condiciones.find((cond) => cond.id?.toString() === value);
+      if (selected) {
+        onSelectCondition(selected);
+      }
+    }
+  };
+
+  const getSelectedCondition = () => {
+    if (selectedDropdownValue) {
+      return condiciones.find((cond) => cond.id?.toString() === selectedDropdownValue);
+    }
+    return null;
+  };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert severity="error" sx={{ mb: 2 }}>
+        {error}
+      </Alert>
+    );
+  }
+
+  const ParameterRange: React.FC<{
+    icon: React.ReactNode;
+    label: string;
+    min: string;
+    max: string;
+    unit: string;
+    color: string;
+  }> = ({ icon, label, min, max, unit, color }) => (
+    <Grid item xs={12} sm={6} md={3}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          p: 1.5,
+          bgcolor: `${color}10`,
+          borderRadius: 2,
+          border: `1px solid ${color}30`,
+        }}
+      >
+        <Box sx={{ color, fontSize: 24 }}>{icon}</Box>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="caption" color="textSecondary" display="block">
+            {label}
+          </Typography>
+          <Typography variant="body2" fontWeight="600">
+            {min} - {max} {unit}
+          </Typography>
+        </Box>
+      </Box>
+    </Grid>
+  );
+
+  const SelectedConditionCard = ({ condition }: { condition: CondicionAlmacenamiento }) => (
+    <Card
+      sx={{
+        border: "2px solid #667eea",
+        boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
+        background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)",
+      }}
+    >
+      <CardContent>
+        <Typography variant="h6" fontWeight="600" gutterBottom>
+          {condition.nombre}
+          <Typography component="span" variant="caption" color="textSecondary" sx={{ ml: 2 }}>
+            ID: {condition.id}
+          </Typography>
+        </Typography>
+        <Typography variant="subtitle2" color="primary" sx={{ mb: 2 }}>
+          Condición Seleccionada
+        </Typography>
+        <Grid container spacing={2}>
+          <ParameterRange
+            icon={<FiThermometer />}
+            label="Temperatura"
+            min={condition.temperatura_min}
+            max={condition.temperatura_max}
+            unit="°C"
+            color="#f44336"
+          />
+          <ParameterRange
+            icon={<FiDroplet />}
+            label="Humedad"
+            min={condition.humedad_min}
+            max={condition.humedad_max}
+            unit="%"
+            color="#2196f3"
+          />
+          <ParameterRange
+            icon={<FiSun />}
+            label="Iluminación"
+            min={condition.lux_min}
+            max={condition.lux_max}
+            unit="Lux"
+            color="#ff9800"
+          />
+          <ParameterRange
+            icon={<FaWeight />}
+            label="Presión"
+            min={condition.presion_min}
+            max={condition.presion_max}
+            unit="hPa"
+            color="#9c27b0"
+          />
+        </Grid>
+      </CardContent>
+    </Card>
   );
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center",
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-        py: 2
-      }}>
-        <Typography variant="h6" component="div">
-          {isEditingExisting ? "Gestión de Condiciones" : "Nueva Condición"}
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
+        <Typography variant="h6" fontWeight="600">
+          Condiciones de Almacenamiento
         </Typography>
-        <IconButton 
-          onClick={onClose} 
-          size="small" 
-          sx={{ color: theme.palette.common.white }}
-        >
-          <FaTimes />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent dividers sx={{ py: 3 }}>
-        <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Seleccionar condición existente</InputLabel>
-          <Select
-            value={selectedConditionId}
-            onChange={handleSelectCondition}
-            label="Seleccionar condición existente"
-            variant="outlined"
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 250,
-                }
-              }
-            }}
-          >
-            <MenuItem value="">
-              <em>Crear nueva condición</em>
-            </MenuItem>
-            {existingConditions.map((cond) => (
-              <MenuItem key={cond.id} value={cond.id?.toString() || ""}>
-                {cond.nombre}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Divider sx={{ my: 3 }} />
-
-        <TextField
-          label="Nombre de la condición"
-          name="nombre"
-          value={condiciones.nombre}
-          onChange={handleCondicionesChange}
-          fullWidth
-          variant="outlined"
-          margin="normal"
-          disabled={isEditingExisting}
-          InputLabelProps={{ shrink: true }}
-          sx={{ mb: 3 }}
-        />
-
-        <SectionTitle>Parámetros Ambientales</SectionTitle>
-        <Grid container spacing={3}>
-          {/* Temperatura */}
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="body2" color="textSecondary">
-                  Temperatura (°C)
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Mínima"
-                  name="temperatura_min"
-                  value={condiciones.temperatura_min}
-                  onChange={handleCondicionesChange}
-                  fullWidth
-                  variant="outlined"
-                  type="number"
-                  disabled={isEditingExisting}
-                  InputProps={{
-                    endAdornment: <Typography variant="caption">°C</Typography>,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Máxima"
-                  name="temperatura_max"
-                  value={condiciones.temperatura_max}
-                  onChange={handleCondicionesChange}
-                  fullWidth
-                  variant="outlined"
-                  type="number"
-                  disabled={isEditingExisting}
-                  InputProps={{
-                    endAdornment: <Typography variant="caption">°C</Typography>,
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Humedad */}
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="body2" color="textSecondary">
-                  Humedad Relativa (%)
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Mínima"
-                  name="humedad_min"
-                  value={condiciones.humedad_min}
-                  onChange={handleCondicionesChange}
-                  fullWidth
-                  variant="outlined"
-                  type="number"
-                  disabled={isEditingExisting}
-                  InputProps={{
-                    endAdornment: <Typography variant="caption">%</Typography>,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Máxima"
-                  name="humedad_max"
-                  value={condiciones.humedad_max}
-                  onChange={handleCondicionesChange}
-                  fullWidth
-                  variant="outlined"
-                  type="number"
-                  disabled={isEditingExisting}
-                  InputProps={{
-                    endAdornment: <Typography variant="caption">%</Typography>,
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Iluminación */}
-        <SectionTitle>Control de Iluminación</SectionTitle>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Nivel Mínimo (Lux)"
-              name="lux_min"
-              value={condiciones.lux_min}
-              onChange={handleCondicionesChange}
-              fullWidth
-              variant="outlined"
-              type="number"
-              disabled={isEditingExisting}
-              InputProps={{
-                endAdornment: <Typography variant="caption">Lux</Typography>,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Nivel Máximo (Lux)"
-              name="lux_max"
-              value={condiciones.lux_max}
-              onChange={handleCondicionesChange}
-              fullWidth
-              variant="outlined"
-              type="number"
-              disabled={isEditingExisting}
-              InputProps={{
-                endAdornment: <Typography variant="caption">Lux</Typography>,
-              }}
-            />
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Presión */}
-        <SectionTitle>Presión Atmosférica</SectionTitle>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Mínima (hPa)"
-              name="presion_min"
-              value={condiciones.presion_min}
-              onChange={handleCondicionesChange}
-              fullWidth
-              variant="outlined"
-              type="number"
-              disabled={isEditingExisting}
-              InputProps={{
-                endAdornment: <Typography variant="caption">hPa</Typography>,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Máxima (hPa)"
-              name="presion_max"
-              value={condiciones.presion_max}
-              onChange={handleCondicionesChange}
-              fullWidth
-              variant="outlined"
-              type="number"
-              disabled={isEditingExisting}
-              InputProps={{
-                endAdornment: <Typography variant="caption">hPa</Typography>,
-              }}
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-
-      <DialogActions sx={{ px: 3, py: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
-        <Button 
-          onClick={onClose} 
-          variant="outlined" 
-          color="secondary"
-          sx={{ width: { xs: '100%', sm: 'auto' }, mb: { xs: 1, sm: 0 } }}
-        >
-          Cancelar
-        </Button>
         <Button
-          onClick={handleAddCondition}
           variant="contained"
-          color="primary"
-          sx={{ 
-            width: { xs: '100%', sm: 'auto' },
-            ml: { sm: 2 }
+          startIcon={<FaPlus />}
+          onClick={handleCreateNew}
+          sx={{
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            textTransform: "none",
+            fontWeight: 600,
+            px: 3,
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            "&:hover": {
+              boxShadow: "0 6px 8px rgba(0,0,0,0.15)",
+              transform: "translateY(-1px)",
+            },
           }}
         >
-          {isEditingExisting ? "Actualizar Condición" : "Guardar Nueva"}
+          Nueva Condición
         </Button>
-      </DialogActions>
-    </Dialog>
+      </Box>
+
+      {condiciones.length === 0 ? (
+        <Card>
+          <CardContent sx={{ textAlign: "center", py: 4 }}>
+            <Typography variant="body1" color="textSecondary">
+              No hay condiciones registradas
+            </Typography>
+            <Button
+              variant="outlined"
+              startIcon={<FaPlus />}
+              onClick={handleCreateNew}
+              sx={{ mt: 2 }}
+            >
+              Crear Primera Condición
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          {/* Dropdown para seleccionar condición */}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <FormControl fullWidth>
+                <InputLabel>Seleccionar Condición</InputLabel>
+                <Select
+                  value={selectedDropdownValue}
+                  label="Seleccionar Condición"
+                  onChange={handleDropdownChange}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una condición...</em>
+                  </MenuItem>
+                  {condiciones.map((cond) => (
+                    <MenuItem key={cond.id} value={cond.id?.toString() || ""}>
+                      {cond.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </CardContent>
+          </Card>
+
+          {/* Tarjeta destacada con la condición seleccionada */}
+          {selectedDropdownValue && getSelectedCondition() && (
+            <SelectedConditionCard condition={getSelectedCondition()!} />
+          )}
+        </>
+      )}
+    </Box>
   );
 };
 
-export default CondicionAlmacenamientoDialog;
+export default CondicionAlmacenamientoList;

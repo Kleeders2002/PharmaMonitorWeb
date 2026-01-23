@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  FaPills, FaVial, FaFlask, FaClipboardList, FaTimes, FaPlus,
+import {
+  FaPills, FaVial, FaFlask, FaClipboardList, FaTimes,
   FaNotesMedical, FaBan, FaExclamationTriangle, FaCube
 } from 'react-icons/fa';
-import { Alert, Button, TextField, InputAdornment, IconButton, CircularProgress, SelectChangeEvent } from '@mui/material';
+import { Alert, Button, TextField, InputAdornment, IconButton, CircularProgress, MenuItem } from '@mui/material';
 import api from '../api';
 import HeaderDashboard from '../components/HeaderDashboard';
 import Sidebar from '../components/Sidebar';
-import CondicionAlmacenamientoDialog, { CondicionAlmacenamiento } from '../components/condicionalmacenamiento';
-import MenuItem from '@mui/material/MenuItem';
+import CondicionAlmacenamientoList, { CondicionAlmacenamiento } from '../components/condicionalmacenamiento';
 
 const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [formData, setFormData] = useState({
@@ -35,12 +34,10 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
     presion_max: '',
   });
 
-  const [open, setOpen] = useState(false);
+  const [selectedConditionId, setSelectedConditionId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [selectedConditionId, setSelectedConditionId] = useState<string>('');
   const [formaFarmaceutica, setFormaFarmaceutica] = useState<any[]>([]);
-  const [existingConditions, setExistingConditions] = useState<CondicionAlmacenamiento[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,11 +46,7 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [conditionsResponse, formasResponse] = await Promise.all([
-          api.get('/condiciones/'),
-          api.get('/formafarmaceutica/')
-        ]);
-        setExistingConditions(conditionsResponse.data);
+        const formasResponse = await api.get('/formafarmaceutica/');
         setFormaFarmaceutica(formasResponse.data);
       } catch (error) {
         // Error handled silently, user can see missing data
@@ -61,12 +54,6 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
     };
     fetchData();
   }, []);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedConditionId('');
-  };
 
   const handleRemoveImage = () => {
     setPreview(null);
@@ -77,35 +64,9 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCondicionesChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setCondiciones(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectCondition = (e: SelectChangeEvent<string>) => {
-    const conditionId = e.target.value;
-    setSelectedConditionId(conditionId);
-    const selected = existingConditions.find(cond => cond.id === parseInt(conditionId));
-    selected && setCondiciones(selected);
-  };
-
-  const handleSaveCondition = async () => {
-    if (selectedConditionId) {
-      handleClose();
-      return;
-    }
-
-    try {
-      const { id, ...nuevaCondicion } = condiciones;
-      const response = await api.post('/condiciones/', nuevaCondicion);
-      if ([200, 201].includes(response.status)) {
-        setExistingConditions([...existingConditions, response.data]);
-        setCondiciones(response.data);
-        handleClose();
-      }
-    } catch (error) {
-      setError('Error al guardar la condición ambiental');
-    }
+  const handleSelectCondition = (condicion: CondicionAlmacenamiento) => {
+    setCondiciones(condicion);
+    setSelectedConditionId(condicion.id?.toString() || '');
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -373,28 +334,10 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
                             />
 
                             <div className="md:col-span-2">
-                              <Button
-                                variant="outlined"
-                                color="primary"
-                                fullWidth
-                                onClick={handleOpen}
-                                sx={{
-                                  height: '50px',
-                                  borderRadius: '12px',
-                                  textTransform: 'none',
-                                  fontSize: '16px',
-                                  borderColor: '#e5e7eb',
-                                  '&:hover': {
-                                    borderColor: '#bfdbfe',
-                                    backgroundColor: '#f0f9ff'
-                                  }
-                                }}
-                                startIcon={<FaPlus className="text-blue-500" />}
-                              >
-                                {condiciones.nombre
-                                  ? `Condición: ${condiciones.nombre}`
-                                  : 'Definir Condiciones de Almacenamiento'}
-                              </Button>
+                              <CondicionAlmacenamientoList
+                                onSelectCondition={handleSelectCondition}
+                                selectedConditionId={selectedConditionId}
+                              />
                             </div>
 
                             <TextField
@@ -539,17 +482,6 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
               </div>
             </div>
           </main>
-
-          <CondicionAlmacenamientoDialog
-            open={open}
-            onClose={handleClose}
-            existingConditions={existingConditions}
-            selectedConditionId={selectedConditionId}
-            handleSelectCondition={handleSelectCondition}
-            handleAddCondition={handleSaveCondition}
-            condiciones={condiciones}
-            handleCondicionesChange={handleCondicionesChange}
-          />
         </div>
       </div>
     </div>
