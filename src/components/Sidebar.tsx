@@ -254,26 +254,40 @@ const NestedMenuItem: React.FC<{
 }> = ({ icon, label, subItems, isActive }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLLIElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      // No cerrar si el click es dentro del menú (botón o dropdown)
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    // Solo agregar el listener cuando el menú está abierto
+    if (isOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [isOpen]);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
+  const handleItemClick = (e: React.MouseEvent) => {
+    // Cerrar el menú después de hacer clic en un subitem
+    setTimeout(() => setIsOpen(false), 100);
+  };
 
   return (
     <li ref={menuRef} className="relative">
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
+        ref={buttonRef}
+        onClick={handleToggle}
         className={`group w-full flex items-center p-3 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden ${
           isActive || isOpen
             ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 text-white shadow-lg'
@@ -295,11 +309,15 @@ const NestedMenuItem: React.FC<{
       </button>
 
       {isOpen && (
-        <ul className="ml-3 mt-2 space-y-1 overflow-hidden animate-slide-down">
+        <ul
+          className="ml-3 mt-2 space-y-1 overflow-hidden animate-slide-down"
+          onClick={(e) => e.stopPropagation()}
+        >
           {subItems.map((subItem, index) => (
             <li key={subItem.to} style={{ animationDelay: `${index * 0.05}s` }}>
               <Link
                 to={subItem.to}
+                onClick={handleItemClick}
                 className={`group flex items-center p-2.5 pl-6 text-sm font-medium rounded-xl transition-all duration-300 ${
                   location.pathname === subItem.to
                     ? 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 shadow-md'

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   FiBell,
   FiUser,
@@ -45,25 +46,96 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
     foto: '',
     rol: ''
   });
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const [notificationsPosition, setNotificationsPosition] = useState({ top: 0, right: 0 });
 
   const navigate = useNavigate();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const notificationsRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const notificationsButtonRef = useRef<HTMLButtonElement>(null);
+  const menuDropdownRef = useRef<HTMLDivElement>(null);
+  const notificationsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns when clicking outside
+  // Calcular posición del dropdown
+  const updateDropdownPositions = () => {
+    if (menuButtonRef.current) {
+      const rect = menuButtonRef.current.getBoundingClientRect();
+      setMenuPosition({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
+    }
+    if (notificationsButtonRef.current) {
+      const rect = notificationsButtonRef.current.getBoundingClientRect();
+      setNotificationsPosition({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
+    }
+  };
+
+  useEffect(() => {
+    updateDropdownPositions();
+    window.addEventListener('scroll', updateDropdownPositions, true);
+    window.addEventListener('resize', updateDropdownPositions);
+    return () => {
+      window.removeEventListener('scroll', updateDropdownPositions, true);
+      window.removeEventListener('resize', updateDropdownPositions);
+    };
+  }, []);
+
+  // Recalcular posiciones cuando se abre un menú
+  useEffect(() => {
+    if (isMenuOpen || isNotificationsOpen) {
+      updateDropdownPositions();
+    }
+  }, [isMenuOpen, isNotificationsOpen]);
+
+  // CORRECCIÓN PRINCIPAL: Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
+      const target = event.target as Node;
+
+      // Si no hay menús abiertos, no hacemos nada
+      if (!isMenuOpen && !isNotificationsOpen) return;
+
+      // Verificar notificaciones - botón Y dropdown
+      if (isNotificationsOpen) {
+        const clickedButton = notificationsButtonRef.current?.contains(target);
+        const clickedDropdown = notificationsDropdownRef.current?.contains(target);
+
+        if (!clickedButton && !clickedDropdown) {
+          setIsNotificationsOpen(false);
+        }
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
-        setIsNotificationsOpen(false);
+
+      // Verificar menú usuario - botón Y dropdown
+      if (isMenuOpen) {
+        const clickedButton = menuButtonRef.current?.contains(target);
+        const clickedDropdown = menuDropdownRef.current?.contains(target);
+
+        if (!clickedButton && !clickedDropdown) {
+          setIsMenuOpen(false);
+        }
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isMenuOpen, isNotificationsOpen]);
+
+  const handleMenuToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newState = !isMenuOpen;
+    setIsMenuOpen(newState);
+    setIsNotificationsOpen(false);
+    // Recalcular posición después de que el estado cambie
+    setTimeout(updateDropdownPositions, 10);
+  };
+
+  const handleNotificationsToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newState = !isNotificationsOpen;
+    setIsNotificationsOpen(newState);
+    setIsMenuOpen(false);
+    // Recalcular posición después de que el estado cambie
+    setTimeout(updateDropdownPositions, 10);
+  };
 
   // Obtener datos del usuario autenticado
   useEffect(() => {
@@ -153,11 +225,12 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
         </div>
 
         {/* Controles Derecha */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 relative z-50">
           {/* Notificaciones */}
-          <div className="relative" ref={notificationsRef}>
+          <div className="relative">
             <button
-              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              ref={notificationsButtonRef}
+              onClick={handleNotificationsToggle}
               className="group relative p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 hover:scale-105 hover:shadow-md"
             >
               <FiBell className="w-5 h-5 text-blue-600 group-hover:animate-bounce" />
@@ -168,10 +241,14 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
               )}
             </button>
 
-            {/* Dropdown Notificaciones con glassmorphism */}
-            {isNotificationsOpen && (
-              <div className="absolute right-0 mt-3 w-96 sm:w-[420px] origin-top-right animate-scale-in">
-                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+            {/* Dropdown Notificaciones */}
+            {isNotificationsOpen && createPortal(
+              <div
+                ref={notificationsDropdownRef}
+                className="fixed w-96 sm:w-[420px] z-[9999] animate-scale-in"
+                style={{ top: `${notificationsPosition.top}px`, right: `${notificationsPosition.right}px` }}
+              >
+                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
                   {/* Header con gradiente */}
                   <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
                     <div className="flex items-center justify-between">
@@ -261,14 +338,16 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div>,
+              document.body
             )}
           </div>
 
           {/* Menú Usuario */}
-          <div className="relative" ref={menuRef}>
+          <div className="relative">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              ref={menuButtonRef}
+              onClick={handleMenuToggle}
               className="flex items-center gap-2 p-1.5 pr-3 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition-all duration-300 hover:scale-105 hover:shadow-md group"
             >
               <div className="relative">
@@ -290,9 +369,13 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
               />
             </button>
 
-            {isMenuOpen && (
-              <div className="absolute right-0 mt-3 w-56 origin-top-right animate-scale-in">
-                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+            {isMenuOpen && createPortal(
+              <div
+                ref={menuDropdownRef}
+                className="fixed w-56 z-[9999] animate-scale-in"
+                style={{ top: `${menuPosition.top}px`, right: `${menuPosition.right}px` }}
+              >
+                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
                   {/* User Info Header */}
                   <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
                     <div className="flex items-center gap-3">
@@ -341,7 +424,8 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div>,
+              document.body
             )}
           </div>
         </div>
