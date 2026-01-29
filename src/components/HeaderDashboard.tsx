@@ -210,14 +210,14 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
   return (
     <header className="bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg sticky top-0 z-40 animate-fade-in-down">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-        {/* Título con gradiente */}
+        {/* Título con gradiente - Espacio para menú hamburguesa en móvil */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
             <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-shift">
               {title}
             </h1>
           </div>
-          <div className="sm:hidden">
+          <div className="sm:hidden pl-14">
             <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-shift">
               {title}
             </h1>
