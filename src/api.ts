@@ -2,7 +2,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
   withCredentials: true,
   // timeout: 10000,
   timeout: 10000,
