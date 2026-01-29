@@ -80,7 +80,13 @@ const ResetPassword: React.FC = () => {
       <div className="w-full max-w-6xl bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 border border-white/20 animate-fade-in">
         {/* Image Section */}
         <div className="md:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-cyan-600 hidden md:flex relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTYgMi42ODYtNiA2em0wIDBoMnY4aDEiIHN0cm9rZT0iI2ZmZiIiBzdHJva2Utd2lkdGg9Ii41IiBvcGFjaXR5PSIuMSIvPjwvZz48L3N2Zz4=')] opacity-10"></div>
+          <div className="absolute inset-0 opacity-10">
+            <svg className="w-full h-full" width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" fillRule="evenodd">
+                <path d="M36 18c3.314 0 6 2.686 6 6s-2.686 6-6 6-6-2.686-6-6 2.686-6 6-6zm0 0h2v8h1" stroke="#fff" strokeWidth="0.5" opacity="0.5"/>
+              </g>
+            </svg>
+          </div>
 
           <div className="relative z-10 flex items-center justify-center p-12 w-full">
             <div className="text-center text-white space-y-8 max-w-md">
