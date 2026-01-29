@@ -1,11 +1,5 @@
 {
-  "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "framework": "create-react-app",
-  "installCommand": "npm install",
-  "devCommand": "npm start",
-  "env": {
-    "REACT_APP_API_URL": "@react-app-api-url"
-  }
+  "framework": "create-react-app"
 }
