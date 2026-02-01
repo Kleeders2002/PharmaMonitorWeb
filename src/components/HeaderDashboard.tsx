@@ -4,7 +4,6 @@ import {
   FiBell,
   FiUser,
   FiChevronDown,
-  FiSettings,
   FiLogOut,
   FiAlertCircle,
   FiMapPin,
@@ -402,15 +401,6 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
                         <FiUser className="w-4 h-4 text-blue-600" />
                       </div>
                       <span className="font-medium">Perfil</span>
-                    </Link>
-                    <Link
-                      to="/configuracion"
-                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-all duration-300 group"
-                    >
-                      <div className="p-2 rounded-lg bg-gradient-to-br from-purple-100 to-blue-100 group-hover:scale-110 transition-transform mr-3">
-                        <FiSettings className="w-4 h-4 text-purple-600" />
-                      </div>
-                      <span className="font-medium">Configuración</span>
                     </Link>
                     <div className="border-t border-gray-100 my-1"></div>
                     <button
