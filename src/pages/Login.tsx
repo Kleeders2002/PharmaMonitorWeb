@@ -132,13 +132,13 @@ const Login: React.FC = () => {
 
         {/* Form Section */}
         <div className="md:w-1/2 p-8 md:p-12 lg:p-16 bg-white/50 backdrop-blur-sm relative">
-          {/* Botón Volver Atrás - Solo visible cuando NO está en modo forgot password */}
+          {/* Botón Volver al Inicio - Solo visible cuando NO está en modo forgot password */}
           {!showForgotPassword && (
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/')}
               className="absolute top-8 left-8 p-2 rounded-lg bg-white/50 hover:bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 transition-all duration-200 group"
-              title="Volver atrás"
+              title="Volver al inicio"
             >
               <FiArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
             </button>
