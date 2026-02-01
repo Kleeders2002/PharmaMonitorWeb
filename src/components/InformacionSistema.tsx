@@ -1,4 +1,4 @@
-import { FaFlask } from 'react-icons/fa';
+import { FiActivity } from 'react-icons/fi';
 
 const InformacionSistema = () => {
   return (
@@ -6,7 +6,7 @@ const InformacionSistema = () => {
       {/* Encabezado */}
       <div className="text-center mb-8 flex-1">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg mb-4 animate-pulse-slow">
-          <FaFlask className="text-white text-3xl" />
+          <FiActivity className="text-white text-3xl" />
         </div>
         <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
           PharmaMonitor

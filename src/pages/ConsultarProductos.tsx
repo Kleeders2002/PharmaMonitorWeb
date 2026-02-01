@@ -16,14 +16,12 @@ import {
 } from "@mui/material";
 import {
   FaSearch,
-  FaExclamationCircle,
   FaTrashAlt,
   FaEdit,
   FaPills,
-  FaCheckCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
-import { FiX } from "react-icons/fi";
+import { FiX, FiCheck, FiAlertCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import HeaderDashboard from "../components/HeaderDashboard";
@@ -624,7 +622,7 @@ const ConsultarProductos: React.FC = () => {
             <DialogTitle className="bg-blue-50 px-8 py-6 border-b border-blue-100">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-red-100 rounded-lg">
-                  <FaExclamationCircle className="text-red-600 text-xl" />
+                  <FiAlertCircle className="text-red-600 text-xl" />
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-gray-900">Confirmar eliminación</h2>
@@ -643,7 +641,7 @@ const ConsultarProductos: React.FC = () => {
                   <Alert
                     severity="error"
                     className="rounded-lg border-l-4 border-red-600 bg-red-50"
-                    icon={<FaExclamationCircle />}
+                    icon={<FiAlertCircle />}
                   >
                     <span className="text-red-800">{deleteError}</span>
                   </Alert>
@@ -652,7 +650,7 @@ const ConsultarProductos: React.FC = () => {
                   <Alert
                     severity="success"
                     className="rounded-lg border-l-4 border-green-600 bg-green-50"
-                    icon={<FaCheckCircle />}
+                    icon={<FiCheck />}
                   >
                     <span className="text-green-800">{deleteSuccess}</span>
                   </Alert>

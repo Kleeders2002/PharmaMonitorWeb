@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  FaPills, FaVial, FaFlask, FaClipboardList,
+  FaPills, FaVial, FaClipboardList,
   FaNotesMedical, FaBan, FaExclamationTriangle, FaCube
 } from 'react-icons/fa';
+import { FiActivity } from 'react-icons/fi';
 import { FiX } from 'react-icons/fi';
 import { Alert, Button, TextField, InputAdornment, IconButton, CircularProgress, MenuItem } from '@mui/material';
 import api from '../api';
@@ -342,7 +343,7 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
                               InputProps={{
                                 startAdornment: (
                                   <InputAdornment position="start">
-                                    <FaFlask className="text-blue-500" />
+                                    <FiActivity className="text-blue-500" />
                                   </InputAdornment>
                                 ),
                               }}

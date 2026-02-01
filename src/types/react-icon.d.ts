@@ -58,6 +58,7 @@ declare module 'react-icons/fi' {
   export const FiSettings: React.FC<IconBaseProps>;
   export const FiLogOut: React.FC<IconBaseProps>;
   export const FiX: React.FC<IconBaseProps>;
+  export const FiCheck: React.FC<IconBaseProps>;
   export const FiMenu: React.FC<IconBaseProps>;
   export const FiExternalLink: React.FC<IconBaseProps>;
   export const FiBox: React.FC<IconBaseProps>;
