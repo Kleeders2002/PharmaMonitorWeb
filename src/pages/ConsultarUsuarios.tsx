@@ -246,67 +246,150 @@ const ConsultarUsuarios: React.FC = () => {
                           {error}
                         </Typography>
                       </Alert>
-                    ) : (
-                      <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-                        <DataGrid
-                          rows={filteredUsuarios}
-                          columns={columns}
-                          getRowId={(row) => row.idusuario}
-                          autoHeight
-                          initialState={{
-                            pagination: {
-                              paginationModel: { page: 0, pageSize: 8},
-                            },
-                          }}
-                          pageSizeOptions={[8, 25, 50]}
-                          slots={{
-                            noRowsOverlay: () => (
-                              <div className="flex flex-col justify-center items-center h-48 gap-2 text-gray-400">
-                                <FaUsers className="text-4xl" />
-                                <span className="text-lg">No se encontraron usuarios</span>
-                              </div>
-                            ),
-                          }}
-                          sx={{
-                            '& .MuiDataGrid-columnHeaders': {
-                              backgroundColor: '#f8fafc',
-                              fontSize: '0.875rem',
-                              fontWeight: 700,
-                              textTransform: 'uppercase',
-                              letterSpacing: '0.05em',
-                              color: '#64748b',
-                              borderBottom: '2px solid #e2e8f0'
-                            },
-                            '& .MuiDataGrid-cell': {
-                              borderRight: '1px solid #f1f5f9',
-                              '&:focus': {
-                                outline: 'none'
-                              }
-                            },
-                            '& .MuiDataGrid-row': {
-                              transition: 'all 0.2s ease',
-                              animation: 'fadeInUp 0.3s ease-out',
-                              '&:hover': {
-                                backgroundColor: 'rgba(59, 130, 246, 0.04)',
-                                transform: 'scale(1.01)',
-                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                              }
-                            },
-                            '& .MuiDataGrid-virtualScroller': {
-                              minHeight: '500px',
-                              scrollbarWidth: 'thin',
-                              '&::-webkit-scrollbar': {
-                                width: '8px',
-                                height: '8px'
-                              },
-                              '&::-webkit-scrollbar-thumb': {
-                                backgroundColor: '#cbd5e1',
-                                borderRadius: '4px'
-                              }
-                            }
-                          }}
-                        />
+                    ) : filteredUsuarios.length === 0 ? (
+                      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4 text-gray-400">
+                        <FaUsers className="text-6xl" />
+                        <span className="text-xl font-medium">No se encontraron usuarios</span>
+                        <span className="text-sm">Intenta con otro término de búsqueda</span>
                       </div>
+                    ) : (
+                      <>
+                        {/* Vista de Tarjetas - Móvil */}
+                        <div className="md:hidden space-y-4">
+                          {filteredUsuarios.map((usuario) => (
+                            <div
+                              key={usuario.idusuario}
+                              className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden"
+                            >
+                              {/* Header de la tarjeta */}
+                              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-3 flex items-center gap-3 border-b border-blue-100">
+                                {usuario.foto ? (
+                                  <img
+                                    src={usuario.foto}
+                                    alt={usuario.nombre}
+                                    className="w-14 h-14 rounded-lg object-cover border-2 border-white shadow-sm"
+                                  />
+                                ) : (
+                                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center border-2 border-white shadow-sm">
+                                    <span className="text-xl font-bold text-blue-600">
+                                      {usuario.nombre.charAt(0).toUpperCase()}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-bold text-gray-900 truncate">
+                                    {usuario.nombre} {usuario.apellido}
+                                  </h3>
+                                  <p className="text-sm text-gray-600 truncate">{usuario.email}</p>
+                                </div>
+                                <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                                  usuario.rol === 'Administrador'
+                                    ? 'bg-purple-100 text-purple-700'
+                                    : 'bg-blue-100 text-blue-700'
+                                }`}>
+                                  {usuario.rol}
+                                </span>
+                              </div>
+
+                              {/* Contenido de la tarjeta */}
+                              <div className="p-4 space-y-2">
+                                <div className="flex justify-between items-center text-sm">
+                                  <span className="text-gray-500">ID:</span>
+                                  <span className="font-semibold text-gray-900">#{usuario.idusuario}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-sm">
+                                  <span className="text-gray-500">Nombre:</span>
+                                  <span className="font-medium text-gray-900">{usuario.nombre}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-sm">
+                                  <span className="text-gray-500">Apellido:</span>
+                                  <span className="font-medium text-gray-900">{usuario.apellido}</span>
+                                </div>
+
+                                {/* Acciones */}
+                                <div className="flex gap-2 pt-3 border-t border-gray-100">
+                                  <button
+                                    onClick={() => handleEdit(usuario.idusuario)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm hover:shadow-md text-sm font-semibold"
+                                  >
+                                    <FaEdit className="text-xs" />
+                                    Editar
+                                  </button>
+                                  <button
+                                    onClick={() => handleClickOpen(usuario.idusuario)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-sm hover:shadow-md text-sm font-semibold"
+                                  >
+                                    <FaTrashAlt className="text-xs" />
+                                    Eliminar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Vista de Tabla - Desktop */}
+                        <div className="hidden md:block border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                          <DataGrid
+                            rows={filteredUsuarios}
+                            columns={columns}
+                            getRowId={(row) => row.idusuario}
+                            autoHeight
+                            initialState={{
+                              pagination: {
+                                paginationModel: { page: 0, pageSize: 8},
+                              },
+                            }}
+                            pageSizeOptions={[8, 25, 50]}
+                            slots={{
+                              noRowsOverlay: () => (
+                                <div className="flex flex-col justify-center items-center h-48 gap-2 text-gray-400">
+                                  <FaUsers className="text-4xl" />
+                                  <span className="text-lg">No se encontraron usuarios</span>
+                                </div>
+                              ),
+                            }}
+                            sx={{
+                              '& .MuiDataGrid-columnHeaders': {
+                                backgroundColor: '#f8fafc',
+                                fontSize: '0.875rem',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                                color: '#64748b',
+                                borderBottom: '2px solid #e2e8f0'
+                              },
+                              '& .MuiDataGrid-cell': {
+                                borderRight: '1px solid #f1f5f9',
+                                '&:focus': {
+                                  outline: 'none'
+                                }
+                              },
+                              '& .MuiDataGrid-row': {
+                                transition: 'all 0.2s ease',
+                                animation: 'fadeInUp 0.3s ease-out',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(59, 130, 246, 0.04)',
+                                  transform: 'scale(1.01)',
+                                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                                }
+                              },
+                              '& .MuiDataGrid-virtualScroller': {
+                                minHeight: '500px',
+                                scrollbarWidth: 'thin',
+                                '&::-webkit-scrollbar': {
+                                  width: '8px',
+                                  height: '8px'
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                  backgroundColor: '#cbd5e1',
+                                  borderRadius: '4px'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
