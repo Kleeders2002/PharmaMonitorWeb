@@ -70,9 +70,13 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
     setIsSubmitting(true);
 
     try {
+      console.log('Enviando datos del usuario:', formData);
       const response = await api.post('/usuarios/', formData);
 
-      if (response.status === 200) {
+      console.log('Respuesta del servidor:', response.status, response.data);
+
+      // Aceptar tanto 200 (OK) como 201 (Created)
+      if (response.status === 200 || response.status === 201) {
         setSuccess('Usuario agregado exitosamente');
         setFormData({
           nombre: '',
@@ -86,9 +90,20 @@ const AgregarUsuario: React.FC<{ children?: React.ReactNode }> = ({ children }) 
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+      } else {
+        setError(`Respuesta inesperada del servidor: ${response.status}`);
       }
     } catch (error: any) {
-      setError(error.response?.data?.detail || 'Error inesperado al agregar el usuario.');
+      console.error('Error completo:', error);
+      console.error('Respuesta del error:', error.response);
+
+      // Mostrar detalles específicos del error
+      const errorMessage = error.response?.data?.detail ||
+                          error.response?.data?.message ||
+                          error.response?.data?.error ||
+                          error.message ||
+                          'Error inesperado al agregar el usuario';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
