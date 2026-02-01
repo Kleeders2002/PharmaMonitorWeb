@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  FaPills, FaVial, FaFlask, FaClipboardList, FaTimes,
+  FaPills, FaVial, FaFlask, FaClipboardList,
   FaNotesMedical, FaBan, FaExclamationTriangle, FaCube
 } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
 import { Alert, Button, TextField, InputAdornment, IconButton, CircularProgress, MenuItem } from '@mui/material';
 import api from '../api';
 import HeaderDashboard from '../components/HeaderDashboard';
@@ -213,7 +214,7 @@ const AgregarProducto: React.FC<{ children?: React.ReactNode }> = ({ children })
                                     className="absolute top-2 right-2 bg-white/90 hover:bg-white shadow-lg"
                                     onClick={handleRemoveImage}
                                   >
-                                    <FaTimes className="text-red-600" />
+                                    <FiX className="text-red-600" />
                                   </IconButton>
                                 </>
                               ) : (

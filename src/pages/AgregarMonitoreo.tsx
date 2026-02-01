@@ -19,7 +19,8 @@ import {
   Chip,
   Divider,
 } from "@mui/material";
-import { FaSearch, FaPlusCircle, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { FaSearch, FaPlusCircle, FaInfoCircle } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 import HeaderDashboard from "../components/HeaderDashboard";
 import api from "../api";
@@ -361,7 +362,7 @@ const AgregarMonitoreo: React.FC = () => {
               <DialogActions className="p-6 border-t">
                 <Button
                   variant="outlined"
-                  startIcon={<FaTimes />}
+                  startIcon={<FiX />}
                   onClick={() => setDialogOpen(false)}
                   sx={{
                     borderRadius: '12px',

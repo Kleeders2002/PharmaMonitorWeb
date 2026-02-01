@@ -14,7 +14,7 @@ import {
   useTheme,
   MenuItem,
 } from "@mui/material";
-import { FaTimes } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 import api from "../api";
 
 export interface ProductoFarmaceutico {
@@ -140,7 +140,7 @@ const EditarProductoDialog: React.FC<EditarProductoDialogProps> = ({
             transition: 'all 0.3s ease',
           }}
         >
-          <FaTimes />
+          <FiX />
         </IconButton>
       </DialogTitle>
 

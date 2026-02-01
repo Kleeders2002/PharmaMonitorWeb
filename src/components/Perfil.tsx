@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUser, FaEnvelope, FaLock, FaCamera, FaTimes } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaCamera } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
 import { Alert, Button, TextField, InputAdornment, IconButton, CircularProgress } from '@mui/material';
 import api from '../api';
 import HeaderDashboard from '../components/HeaderDashboard';
@@ -199,7 +200,7 @@ const Perfil: React.FC = () => {
                                         className="absolute top-2 right-2 bg-white/90 hover:bg-white shadow-lg"
                                         onClick={handleRemoveImage}
                                       >
-                                        <FaTimes className="text-red-600" />
+                                        <FiX className="text-red-600" />
                                       </IconButton>
                                     </>
                                   ) : (

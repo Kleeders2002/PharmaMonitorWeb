@@ -13,7 +13,7 @@ import {
   Divider,
   useTheme,
 } from "@mui/material";
-import { FaTimes } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 
 export interface CondicionAlmacenamiento {
   id?: number;
@@ -89,7 +89,7 @@ const EditarCondicionDialog: React.FC<EditarCondicionDialogProps> = ({
             transition: 'all 0.3s ease',
           }}
         >
-          <FaTimes />
+          <FiX />
         </IconButton>
       </DialogTitle>
 

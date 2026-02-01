@@ -20,10 +20,10 @@ import {
   FaTrashAlt,
   FaEdit,
   FaPills,
-  FaTimes,
   FaCheckCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import HeaderDashboard from "../components/HeaderDashboard";
@@ -665,7 +665,7 @@ const ConsultarProductos: React.FC = () => {
                   onClick={handleCloseDelete}
                   variant="text"
                   className="text-gray-600 hover:bg-gray-100 px-5 py-2 rounded-lg"
-                  startIcon={<FaTimes />}
+                  startIcon={<FiX />}
                 >
                   Cancelar
                 </Button>

@@ -13,7 +13,8 @@ import {
   DialogTitle,
   InputAdornment
 } from '@mui/material';
-import { FaSearch, FaExclamationCircle, FaTrashAlt, FaEdit, FaUsers, FaTimes, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSearch, FaExclamationCircle, FaTrashAlt, FaEdit, FaUsers, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
@@ -452,7 +453,7 @@ const ConsultarUsuarios: React.FC = () => {
                   onClick={handleClose}
                   variant="text"
                   className="text-gray-600 hover:bg-gray-100 px-5 py-2 rounded-lg"
-                  startIcon={<FaTimes />}
+                  startIcon={<FiX />}
                 >
                   Cancelar
                 </Button>
