@@ -24,7 +24,7 @@ const Login: React.FC = () => {
         const response = await api.get('/check-auth', { withCredentials: true });
         if (response.data.authenticated) {
           const { rol } = response.data.user;
-          navigate(rol === 1 ? '/AdminDashboard' : '/UserDashboard');
+          navigate(rol === 1 ? '/AdminDashboard' : '/User');
         }
       } catch (error) {
         // Silently handle unauthenticated state
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
 
       if (response.data.message === 'Login exitoso') {
         const { idrol } = response.data.user;
-        navigate(idrol === 1 ? '/AdminDashboard' : '/UserDashboard');
+        navigate(idrol === 1 ? '/AdminDashboard' : '/User');
       }
     } catch (error: any) {
       setError(error.response?.data?.detail || 'Credenciales incorrectas. Por favor verifique sus datos');

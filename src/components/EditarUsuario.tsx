@@ -97,7 +97,7 @@ const EditarUsuario: React.FC = () => {
 
       if (response.status === 200) {
         setSuccess('Usuario actualizado exitosamente');
-        setTimeout(() => navigate('/usuarios'), 2000);
+        setTimeout(() => navigate('/ConsultarUsuarios'), 2000);
       }
     } catch (error: any) {
       setError(error.response?.data?.detail || 'Error inesperado al actualizar el usuario.');

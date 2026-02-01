@@ -124,7 +124,7 @@ const AlertasActivas = () => {
         </div>
 
         <button
-          onClick={() => navigate('/gestion-alertas')}
+          onClick={() => navigate('/VerAlertas')}
           className="group relative flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-md border border-blue-200/50 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-300 rounded-xl"></div>

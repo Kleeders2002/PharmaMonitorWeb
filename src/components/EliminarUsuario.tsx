@@ -17,7 +17,7 @@ const EliminarUsuario: React.FC = () => {
       setSuccess('Usuario eliminado exitosamente');
       setError(null);
       // Redirigir después de un corto tiempo
-      setTimeout(() => navigate('/consultar-usuarios'), 2000);
+      setTimeout(() => navigate('/ConsultarUsuarios'), 2000);
     } catch (err) {
       setError('Error al eliminar el usuario');
     }
@@ -97,7 +97,7 @@ const EliminarUsuario: React.FC = () => {
                 </Button>
                 <Button
                   variant="outlined"
-                  onClick={() => navigate('/consultar-usuarios')}
+                  onClick={() => navigate('/ConsultarUsuarios')}
                   sx={{
                     px: 6,
                     py: 1.8,
