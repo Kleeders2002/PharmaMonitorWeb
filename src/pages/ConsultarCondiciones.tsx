@@ -358,74 +358,158 @@ const ConsultarCondiciones: React.FC = () => {
                           {error}
                         </Typography>
                       </Alert>
-                    ) : (
-                      <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-                        <DataGrid
-                          rows={filteredCondiciones}
-                          columns={columns}
-                          getRowId={(row: Condicion) => row.id}
-                          autoHeight
-                          rowHeight={80}
-                          initialState={{
-                            pagination: {
-                              paginationModel: { page: 0, pageSize: 8 },
-                            },
-                          }}
-                          pageSizeOptions={[8, 25, 50]}
-                          slots={{
-                            noRowsOverlay: () => (
-                              <div className="flex flex-col justify-center items-center h-48 gap-2 text-gray-400">
-                                <FaBox className="text-4xl" />
-                                <span className="text-lg">No se encontraron condiciones</span>
-                              </div>
-                            ),
-                          }}
-                          sx={{
-                            "& .MuiDataGrid-columnHeaders": {
-                              backgroundColor: "#f8fafc",
-                              fontSize: "0.675rem",
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                              letterSpacing: "0.05em",
-                              color: "#64748b",
-                              borderBottom: "2px solid #e2e8f0",
-                              minHeight: "0px"
-                            },
-                            "& .MuiDataGrid-columnHeaderTitle": {
-                              whiteSpace: "normal",
-                              lineHeight: "1.2",
-                              textAlign: "center",
-                            },
-                            "& .MuiDataGrid-cell": {
-                              borderRight: "1px solid #f1f5f9",
-                              "&:focus": {
-                                outline: "none",
-                              },
-                            },
-                            "& .MuiDataGrid-row": {
-                              transition: "all 0.2s ease",
-                              animation: "fadeInUp 0.3s ease-out",
-                              "&:hover": {
-                                backgroundColor: "rgba(59, 130, 246, 0.04)",
-                                transform: "scale(1.01)",
-                                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                              },
-                            },
-                            "& .MuiDataGrid-virtualScroller": {
-                              minHeight: "500px",
-                              scrollbarWidth: "thin",
-                              "&::-webkit-scrollbar": {
-                                width: "8px",
-                                height: "8px",
-                              },
-                              "&::-webkit-scrollbar-thumb": {
-                                backgroundColor: "#cbd5e1",
-                                borderRadius: "4px",
-                              },
-                            },
-                          }}
-                        />
+                    ) : filteredCondiciones.length === 0 ? (
+                      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4 text-gray-400">
+                        <FaBox className="text-6xl" />
+                        <span className="text-xl font-medium">No se encontraron condiciones</span>
+                        <span className="text-sm">Intenta con otro término de búsqueda</span>
                       </div>
+                    ) : (
+                      <>
+                        {/* Vista de Tarjetas - Móvil */}
+                        <div className="md:hidden space-y-4">
+                          {filteredCondiciones.map((condicion) => {
+                            const isRelated = (condicion as any).is_related;
+                            return (
+                              <div
+                                key={condicion.id}
+                                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden"
+                              >
+                                {/* Header de la tarjeta */}
+                                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-3 border-b border-blue-100">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center border-2 border-white shadow-sm">
+                                      <FaBox className="text-xl text-blue-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <h3 className="font-bold text-gray-900">{condicion.nombre}</h3>
+                                      <p className="text-xs text-gray-500">ID: {condicion.id}</p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Contenido de la tarjeta */}
+                                <div className="p-4 space-y-2 text-sm">
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <div className="flex flex-col p-2 bg-orange-50 rounded-lg">
+                                      <span className="text-xs text-gray-500">Temperatura</span>
+                                      <span className="font-semibold text-gray-900">{condicion.temperatura_min} - {condicion.temperatura_max}°C</span>
+                                    </div>
+                                    <div className="flex flex-col p-2 bg-blue-50 rounded-lg">
+                                      <span className="text-xs text-gray-500">Humedad</span>
+                                      <span className="font-semibold text-gray-900">{condicion.humedad_min} - {condicion.humedad_max}%</span>
+                                    </div>
+                                    <div className="flex flex-col p-2 bg-yellow-50 rounded-lg">
+                                      <span className="text-xs text-gray-500">Lux</span>
+                                      <span className="font-semibold text-gray-900">{condicion.lux_min} - {condicion.lux_max}</span>
+                                    </div>
+                                    <div className="flex flex-col p-2 bg-purple-50 rounded-lg">
+                                      <span className="text-xs text-gray-500">Presión</span>
+                                      <span className="font-semibold text-gray-900">{condicion.presion_min} - {condicion.presion_max} hPa</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                                    <span className="text-xs text-gray-500">Actualizado: {condicion.fecha_actualizacion}</span>
+                                  </div>
+
+                                  {/* Acciones */}
+                                  <div className="flex gap-2 pt-3 border-t border-gray-100">
+                                    <button
+                                      onClick={() => handleEdit(condicion.id)}
+                                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm hover:shadow-md text-xs font-semibold"
+                                    >
+                                      <FaEdit className="text-xs" />
+                                      Editar
+                                    </button>
+                                    <button
+                                      onClick={() => !isRelated && handleDelete(condicion.id)}
+                                      disabled={isRelated}
+                                      className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all shadow-sm hover:shadow-md text-xs font-semibold ${
+                                        isRelated
+                                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                          : 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700'
+                                      }`}
+                                      title={isRelated ? 'No se puede eliminar porque está relacionada' : ''}
+                                    >
+                                      <FaTrashAlt className="text-xs" />
+                                      Eliminar
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Vista de Tabla - Desktop */}
+                        <div className="hidden md:block border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                          <DataGrid
+                            rows={filteredCondiciones}
+                            columns={columns}
+                            getRowId={(row: Condicion) => row.id}
+                            autoHeight
+                            rowHeight={80}
+                            initialState={{
+                              pagination: {
+                                paginationModel: { page: 0, pageSize: 8 },
+                              },
+                            }}
+                            pageSizeOptions={[8, 25, 50]}
+                            slots={{
+                              noRowsOverlay: () => (
+                                <div className="flex flex-col justify-center items-center h-48 gap-2 text-gray-400">
+                                  <FaBox className="text-4xl" />
+                                  <span className="text-lg">No se encontraron condiciones</span>
+                                </div>
+                              ),
+                            }}
+                            sx={{
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: "#f8fafc",
+                                fontSize: "0.675rem",
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.05em",
+                                color: "#64748b",
+                                borderBottom: "2px solid #e2e8f0",
+                                minHeight: "0px"
+                              },
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                whiteSpace: "normal",
+                                lineHeight: "1.2",
+                                textAlign: "center",
+                              },
+                              "& .MuiDataGrid-cell": {
+                                borderRight: "1px solid #f1f5f9",
+                                "&:focus": {
+                                  outline: "none",
+                                },
+                              },
+                              "& .MuiDataGrid-row": {
+                                transition: "all 0.2s ease",
+                                animation: "fadeInUp 0.3s ease-out",
+                                "&:hover": {
+                                  backgroundColor: "rgba(59, 130, 246, 0.04)",
+                                  transform: "scale(1.01)",
+                                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                                },
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                minHeight: "500px",
+                                scrollbarWidth: "thin",
+                                "&::-webkit-scrollbar": {
+                                  width: "8px",
+                                  height: "8px",
+                                },
+                                "&::-webkit-scrollbar-thumb": {
+                                  backgroundColor: "#cbd5e1",
+                                  borderRadius: "4px",
+                                },
+                              },
+                            }}
+                          />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
