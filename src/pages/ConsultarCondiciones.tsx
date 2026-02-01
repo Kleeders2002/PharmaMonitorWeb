@@ -31,6 +31,7 @@ interface Condicion {
 }
 
 const ConsultarCondiciones: React.FC = () => {
+  // Estados para condiciones de almacenamiento - Responsive view with cards on mobile
   const [condiciones, setCondiciones] = useState<Condicion[]>([]);
   const [filteredCondiciones, setFilteredCondiciones] = useState<Condicion[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
