@@ -1,195 +1,186 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box } from '@mui/material';
-import { FaMobileAlt, FaQrcode, FaApple, FaAndroid, FaTimes } from 'react-icons/fa';
+import React from 'react';
+import { FaMobileAlt, FaApple, FaAndroid } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
 
 const User: React.FC = () => {
-  const [openModal, setOpenModal] = useState(true);
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
   return (
-    <>
-      <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
-        <div className="flex h-screen">
-          <Sidebar />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
+      <Sidebar />
 
-          <div className="flex-1 flex flex-col h-full overflow-hidden">
-            <HeaderDashboard title="Panel de Usuario" />
+      <div className="flex-1 flex flex-col min-h-screen">
+        <HeaderDashboard title="Descargar Aplicación Móvil" />
 
-            <main className="flex-1 overflow-y-auto">
-              <div className="h-full p-8 2xl:px-12">
-                <div className="max-w-9xl mx-auto">
-                  {/* Panel Principal */}
-                  <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 p-12 text-center">
-                    <div className="max-w-3xl mx-auto space-y-8">
-                      {/* Icono con animación */}
-                      <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full animate-pulse">
-                        <FaMobileAlt className="text-6xl text-blue-600" />
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Hero Section */}
+            <div className="text-center mb-16 animate-fade-in">
+              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mb-6 shadow-lg animate-bounce">
+                <FaMobileAlt className="text-5xl text-white" />
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6">
+                Descarga PharmaMonitor Móvil
+              </h1>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                Para interactuar plenamente con el sistema, escanea el código QR y descarga nuestra aplicación móvil
+              </p>
+            </div>
+
+            {/* Main Content - Two Columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              {/* QR Code Section */}
+              <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8 lg:p-12 animate-fade-in-up">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-8">Escanea el Código QR</h2>
+
+                  {/* QR Code Placeholder */}
+                  <div className="bg-white rounded-2xl p-8 shadow-inner border-4 border-gray-200 inline-block mb-6">
+                    <div className="w-64 h-64 flex items-center justify-center bg-gray-50 rounded-xl">
+                      <div className="text-center">
+                        <FiDownload className="w-20 h-20 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 font-medium">Código QR de la App</p>
+                        <p className="text-xs text-gray-400 mt-2">Reemplazar con imagen real</p>
                       </div>
-
-                      {/* Título principal */}
-                      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                        Bienvenido a PharmaMonitor
-                      </h1>
-
-                      {/* Mensaje informativo */}
-                      <div className="space-y-4">
-                        <p className="text-xl text-gray-700 font-medium">
-                          Para interactuar plenamente con el sistema
-                        </p>
-                        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 border-2 border-blue-200">
-                          <div className="flex items-center justify-center gap-4 mb-4">
-                            <FaQrcode className="text-4xl text-blue-600" />
-                            <h2 className="text-2xl font-bold text-gray-900">
-                              Descarga la Aplicación Móvil
-                            </h2>
-                          </div>
-                          <p className="text-gray-700 text-lg">
-                            Escanea el código QR o descarga la aplicación para acceder a todas las funcionalidades:
-                          </p>
-                          <ul className="text-left text-gray-600 mt-6 space-y-3 max-w-md mx-auto">
-                            <li className="flex items-start gap-3">
-                              <span className="text-blue-600 text-xl">✓</span>
-                              <span>Monitoreo de productos farmacéuticos en tiempo real</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-blue-600 text-xl">✓</span>
-                              <span>Alertas instantáneas sobre condiciones críticas</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-blue-600 text-xl">✓</span>
-                              <span>Gestión de inventario desde cualquier lugar</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-blue-600 text-xl">✓</span>
-                              <span>Registro de métricas y datos de monitoreo</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      {/* Botones de descarga */}
-                      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <button
-                          className="flex items-center gap-3 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                        >
-                          <FaApple className="text-3xl" />
-                          <div className="text-left">
-                            <div className="text-xs opacity-80">Descargar en</div>
-                            <div className="text-lg font-semibold">App Store</div>
-                          </div>
-                        </button>
-                        <button
-                          className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                        >
-                          <FaAndroid className="text-3xl" />
-                          <div className="text-left">
-                            <div className="text-xs opacity-80">Disponible en</div>
-                            <div className="text-lg font-semibold">Google Play</div>
-                          </div>
-                        </button>
-                      </div>
-
-                      {/* Información adicional */}
-                      <p className="text-sm text-gray-500 mt-8">
-                        Si ya tienes la aplicación instalada, puedes cerrar este mensaje y usar la versión web con funciones limitadas.
-                      </p>
                     </div>
+                  </div>
+
+                  <p className="text-gray-600 mb-6">
+                    Usa la cámara de tu celular para escanear este código y ser redirigido directamente a la tienda de aplicaciones
+                  </p>
+
+                  {/* Instructions */}
+                  <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                    <h3 className="font-semibold text-blue-900 mb-3">Instrucciones:</h3>
+                    <ol className="text-left text-sm text-gray-700 space-y-2">
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                        <span>Abre la app de cámara de tu celular</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                        <span>Apunta al código QR</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                        <span>Toca el enlace que aparece para descargar</span>
+                      </li>
+                    </ol>
                   </div>
                 </div>
               </div>
-            </main>
+
+              {/* Features Section */}
+              <div className="space-y-8">
+                <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8 lg:p-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Funcionalidades de la App</h2>
+
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+                        <FiDownload className="text-xl text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Monitoreo en Tiempo Real</h3>
+                        <p className="text-gray-600 text-sm">Visualiza datos de temperatura, humedad y otros parámetros al instante</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                        <FiDownload className="text-xl text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Alertas Instantáneas</h3>
+                        <p className="text-gray-600 text-sm">Recibe notificaciones push cuando algo requiera tu atención</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-md">
+                        <FiDownload className="text-xl text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Escaneo de Productos</h3>
+                        <p className="text-gray-600 text-sm">Escanea códigos QR para ver información detallada de productos</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                        <FiDownload className="text-xl text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Registro Offline</h3>
+                        <p className="text-gray-600 text-sm">Guarda datos sin conexión y sincroniza cuando tengas internet</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Download Buttons */}
+                <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Descarga Directa</h2>
+
+                  <div className="space-y-4">
+                    <button className="w-full flex items-center justify-center gap-4 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                      <FaApple className="text-3xl" />
+                      <div className="text-left">
+                        <div className="text-xs opacity-80">Descargar en</div>
+                        <div className="text-xl font-semibold">App Store</div>
+                      </div>
+                    </button>
+
+                    <button className="w-full flex items-center justify-center gap-4 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                      <FaAndroid className="text-3xl" />
+                      <div className="text-left">
+                        <div className="text-xs opacity-80">Disponible en</div>
+                        <div className="text-xl font-semibold">Google Play</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Info Banner */}
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <p className="text-lg font-semibold mb-2">
+                💡 ¿Ya tienes la aplicación instalada?
+              </p>
+              <p className="text-blue-50">
+                Inicia sesión en la app móvil con tus credenciales para acceder a todas las funcionalidades
+              </p>
+            </div>
           </div>
-        </div>
+        </main>
       </div>
 
-      {/* Modal informativo */}
-      <Dialog
-        open={openModal}
-        onClose={handleClose}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          className: "rounded-2xl shadow-2xl border-2 border-blue-200",
-        }}
-      >
-        <DialogTitle className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-6 rounded-t-2xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-lg">
-                <FaMobileAlt className="text-3xl" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold">Aplicación Móvil Requerida</h2>
-                <p className="text-blue-100 text-sm mt-1">Experiencia completa en tu dispositivo</p>
-              </div>
-            </div>
-            <button
-              onClick={handleClose}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              <FaTimes className="text-2xl" />
-            </button>
-          </div>
-        </DialogTitle>
-
-        <DialogContent className="px-8 py-6">
-          <div className="space-y-4">
-            <p className="text-gray-700 text-lg">
-              Para interactuar plenamente con <strong>PharmaMonitor</strong>, te recomendamos descargar nuestra aplicación móvil.
-            </p>
-
-            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-              <p className="text-gray-700">
-                La versión móvil te permite acceder a funcionalidades completas como:
-              </p>
-              <ul className="mt-3 space-y-2 text-gray-600">
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-600">✓</span>
-                  Monitoreo en tiempo real
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-600">✓</span>
-                  Alertas push instantáneas
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-600">✓</span>
-                  Escaneo de códigos QR
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-600">✓</span>
-                  Registro offline
-                </li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-              <button className="flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all">
-                <FaApple className="text-xl" />
-                <span className="font-semibold">App Store</span>
-              </button>
-              <button className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all">
-                <FaAndroid className="text-xl" />
-                <span className="font-semibold">Google Play</span>
-              </button>
-            </div>
-          </div>
-        </DialogContent>
-
-        <DialogActions className="px-8 py-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
-          <Button
-            onClick={handleClose}
-            className="text-gray-700 hover:text-blue-600 font-semibold"
-          >
-            Entendido, continuar en versión web
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+      {/* Animations */}
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out forwards;
+        }
+        .animate-fade-in-up {
+          opacity: 0;
+          animation: fade-in-up 0.6s ease-out forwards;
+        }
+      `}</style>
+    </div>
   );
 };
 
