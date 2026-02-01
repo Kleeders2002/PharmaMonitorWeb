@@ -245,10 +245,10 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
             {isNotificationsOpen && createPortal(
               <div
                 ref={notificationsDropdownRef}
-                className="fixed w-96 sm:w-[420px] z-[9999] animate-scale-in"
+                className="fixed w-96 sm:w-[420px] z-[10000] animate-scale-in opacity-100"
                 style={{ top: `${notificationsPosition.top}px`, right: `${notificationsPosition.right}px` }}
               >
-                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden opacity-100">
                   {/* Header con gradiente */}
                   <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
                     <div className="flex items-center justify-between">
@@ -372,10 +372,10 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
             {isMenuOpen && createPortal(
               <div
                 ref={menuDropdownRef}
-                className="fixed w-56 z-[9999] animate-scale-in"
+                className="fixed w-56 z-[10000] animate-scale-in opacity-100"
                 style={{ top: `${menuPosition.top}px`, right: `${menuPosition.right}px` }}
               >
-                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden opacity-100">
                   {/* User Info Header */}
                   <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 p-4">
                     <div className="flex items-center gap-3">
@@ -461,6 +461,10 @@ style.textContent = `
     }
   }
 
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out forwards;
+  }
+
   @keyframes gradient-shift {
     0%, 100% {
       background-position: 0% 50%;
@@ -474,9 +478,6 @@ style.textContent = `
     animation: fade-in-down 0.5s ease-out;
   }
 
-  .animate-scale-in {
-    animation: scale-in 0.2s ease-out;
-  }
 
   .animate-gradient-shift {
     background-size: 200% 200%;
