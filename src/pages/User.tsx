@@ -1,5 +1,4 @@
 import React from 'react';
-import { FiDownload, FiSmartphone } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
 
@@ -16,7 +15,7 @@ const User: React.FC = () => {
             {/* Hero Section */}
             <div className="text-center mb-16 animate-fade-in">
               <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mb-6 shadow-lg animate-bounce">
-                <FiSmartphone className="text-5xl text-white" />
+                <span className="text-5xl text-white">📱</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6">
                 Descarga PharmaMonitor Móvil
@@ -37,7 +36,7 @@ const User: React.FC = () => {
                   <div className="bg-white rounded-2xl p-8 shadow-inner border-4 border-gray-200 inline-block mb-6">
                     <div className="w-64 h-64 flex items-center justify-center bg-gray-50 rounded-xl">
                       <div className="text-center">
-                        <FiDownload className="w-20 h-20 text-gray-400 mx-auto mb-4" />
+                        <div className="text-6xl mb-4">📷</div>
                         <p className="text-gray-500 font-medium">Código QR de la App</p>
                         <p className="text-xs text-gray-400 mt-2">Reemplazar con imagen real</p>
                       </div>
@@ -77,7 +76,7 @@ const User: React.FC = () => {
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
-                        <FiDownload className="text-xl text-white" />
+                        <span className="text-xl text-white">⬇️</span>
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">Monitoreo en Tiempo Real</h3>
@@ -87,7 +86,7 @@ const User: React.FC = () => {
 
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                        <FiDownload className="text-xl text-white" />
+                        <span className="text-xl text-white">🔔</span>
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">Alertas Instantáneas</h3>
@@ -97,7 +96,7 @@ const User: React.FC = () => {
 
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-md">
-                        <FiDownload className="text-xl text-white" />
+                        <span className="text-xl text-white">📷</span>
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">Escaneo de Productos</h3>
@@ -107,7 +106,7 @@ const User: React.FC = () => {
 
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
-                        <FiDownload className="text-xl text-white" />
+                        <span className="text-xl text-white">📴</span>
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">Registro Offline</h3>
