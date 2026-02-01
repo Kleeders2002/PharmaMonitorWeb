@@ -31,7 +31,7 @@ interface Condicion {
 }
 
 const ConsultarCondiciones: React.FC = () => {
-  // Estados para condiciones de almacenamiento - Responsive view with cards on mobile
+  // Estados para condiciones de almacenamiento - Responsive view with cards on mobile and table on desktop
   const [condiciones, setCondiciones] = useState<Condicion[]>([]);
   const [filteredCondiciones, setFilteredCondiciones] = useState<Condicion[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -41,6 +41,9 @@ const ConsultarCondiciones: React.FC = () => {
   const [selectedCondition, setSelectedCondition] = useState<CondicionAlmacenamiento | null>(null);
 
   const navigate = useNavigate();
+
+  // NOTA: No existe función handleClickOpen - solo handleDelete directo
+  // Bug corregido en versión responsive
 
   useEffect(() => {
     const fetchCondiciones = async () => {
