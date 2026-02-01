@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaMobileAlt } from 'react-icons/fa';
 import { FiDownload, FiSmartphone } from 'react-icons/fi';
-import Sidebar from '../components/Sidebar'; // Fixed: ensure correct import
+import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
 
 const User: React.FC = () => {
