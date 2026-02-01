@@ -1,6 +1,6 @@
 import React from 'react';
-import { FaMobileAlt, FaApple, FaAndroid } from 'react-icons/fa';
-import { FiDownload } from 'react-icons/fi';
+import { FaMobileAlt } from 'react-icons/fa';
+import { FiDownload, FiSmartphone } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
 
@@ -124,7 +124,7 @@ const User: React.FC = () => {
 
                   <div className="space-y-4">
                     <button className="w-full flex items-center justify-center gap-4 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                      <FaApple className="text-3xl" />
+                      <span className="text-4xl">🍎</span>
                       <div className="text-left">
                         <div className="text-xs opacity-80">Descargar en</div>
                         <div className="text-xl font-semibold">App Store</div>
@@ -132,7 +132,7 @@ const User: React.FC = () => {
                     </button>
 
                     <button className="w-full flex items-center justify-center gap-4 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                      <FaAndroid className="text-3xl" />
+                      <span className="text-4xl">🤖</span>
                       <div className="text-left">
                         <div className="text-xs opacity-80">Disponible en</div>
                         <div className="text-xl font-semibold">Google Play</div>
