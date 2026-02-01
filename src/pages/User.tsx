@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaMobileAlt } from 'react-icons/fa';
 import { FiDownload, FiSmartphone } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
 import HeaderDashboard from '../components/HeaderDashboard';
@@ -17,7 +16,7 @@ const User: React.FC = () => {
             {/* Hero Section */}
             <div className="text-center mb-16 animate-fade-in">
               <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mb-6 shadow-lg animate-bounce">
-                <FaMobileAlt className="text-5xl text-white" />
+                <FiSmartphone className="text-5xl text-white" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6">
                 Descarga PharmaMonitor Móvil
