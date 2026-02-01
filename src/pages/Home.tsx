@@ -157,13 +157,15 @@ const Home: React.FC = () => {
               Accede a la documentación completa del sistema y los protocolos de investigación
             </p>
             <div className="flex justify-center gap-4">
-              <button
-                onClick={() => navigate('/ConsultarRegistros')}
+              <a
+                href="https://drive.google.com/drive/folders/1hQldWUMb2Tefj_c4l4_UUkhAux_GDJbi?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-500/30 hover:scale-105"
               >
                 <FiFileText className="mr-3 text-xl" />
                 Ver Documentación
-              </button>
+              </a>
             </div>
           </div>
         </div>

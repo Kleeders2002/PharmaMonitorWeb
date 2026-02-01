@@ -26,12 +26,14 @@ const PublicHeader: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link 
-              to="/documentacion" 
+            <a
+              href="https://drive.google.com/drive/folders/1hQldWUMb2Tefj_c4l4_UUkhAux_GDJbi?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white/90 hover:text-white px-4 py-2.5 rounded-lg transition-colors hover:bg-white/10"
             >
               Documentación
-            </Link>
+            </a>
 
             <button
               onClick={() => navigate('/login')}
@@ -54,12 +56,14 @@ const PublicHeader: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden absolute top-20 left-0 right-0 bg-white shadow-xl z-50">
             <div className="px-4 pt-4 pb-6 space-y-4">
-              <Link
-                to="/documentacion"
+              <a
+                href="https://drive.google.com/drive/folders/1hQldWUMb2Tefj_c4l4_UUkhAux_GDJbi?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block px-4 py-3 text-gray-800 hover:bg-blue-50 rounded-lg"
               >
                 Documentación
-              </Link>
+              </a>
               <button
                 onClick={() => navigate('/login')}
                 className="w-full text-left px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
