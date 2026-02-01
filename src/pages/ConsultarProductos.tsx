@@ -522,7 +522,7 @@ const ConsultarProductos: React.FC = () => {
                                     Editar
                                   </button>
                                   <button
-                                    onClick={() => handleClickOpen(producto.id!)}
+                                    onClick={() => handleClickOpenDelete(producto.id!)}
                                     disabled={producto.is_related}
                                     className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all shadow-sm hover:shadow-md text-xs font-semibold ${
                                       producto.is_related
