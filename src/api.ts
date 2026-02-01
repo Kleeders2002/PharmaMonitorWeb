@@ -60,21 +60,22 @@ api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    
-    // Evitar loops infinitos
-    if (error.response?.status === 401 && 
+
+    // Evitar loops infinitos y no renovar token durante logout
+    if (error.response?.status === 401 &&
         !originalRequest.url.includes('/silent-renew') &&
+        !originalRequest.url.includes('/logout') &&
         !originalRequest._retry) {
-      
+
       originalRequest._retry = true;
-      
+
       try {
         // Renovar token
         const { data } = await api.post('/silent-renew');
-        
+
         // Actualizar headers automáticamente
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
-        
+
         // Reintentar solicitud original
         return api(originalRequest);
       } catch (refreshError) {
@@ -82,7 +83,7 @@ api.interceptors.response.use(
         window.location.href = '/login';
       }
     }
-    
+
     return Promise.reject(error);
   }
 );

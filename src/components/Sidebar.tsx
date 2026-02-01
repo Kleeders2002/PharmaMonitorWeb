@@ -43,10 +43,10 @@ const Sidebar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await api.post('/logout');
-      document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      navigate('/login');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+    } finally {
+      window.location.href = '/login';
     }
   };
 

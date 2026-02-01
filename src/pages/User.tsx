@@ -7,12 +7,14 @@ const User: React.FC = () => {
 
   const handleLogout = async () => {
     try {
+      // Llamar al endpoint de logout del backend
       await api.post('/logout');
-      document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      navigate('/login');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
-      navigate('/login');
+    } finally {
+      // Siempre redirigir al login y forzar recarga completa
+      // Esto elimina cualquier estado en memoria
+      window.location.href = '/login';
     }
   };
 
