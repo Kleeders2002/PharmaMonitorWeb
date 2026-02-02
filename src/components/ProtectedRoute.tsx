@@ -17,25 +17,19 @@ interface User {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles, ...rest }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
-  // Efecto para redirigir si no está autenticado
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      setShouldRedirect(true);
-    }
-  }, [isLoading, isAuthenticated]);
 
   // Estados de renderizado
   if (isLoading) {
     return <div className="loading-container">Cargando...</div>;
   }
 
-  if (shouldRedirect || !isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
 
-  if (roles && user && !roles.includes(user.idrol)) {
+  // Verificar rol - el backend devuelve user.rol (no user.idrol)
+  const userRol = user.idrol || user.rol;
+  if (roles && userRol && !roles.includes(userRol)) {
     return <Navigate to="/AccesoProhibido" replace />;
   }
 
