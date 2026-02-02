@@ -45,6 +45,10 @@ const AgregarMonitoreo: React.FC = () => {
   const [cantidad, setCantidad] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [monitoreoActivo, setMonitoreoActivo] = useState<{
+    existe: boolean;
+    producto?: string;
+  }>({ existe: false });
 
   useEffect(() => {
     setMounted(true);
@@ -67,6 +71,27 @@ const AgregarMonitoreo: React.FC = () => {
       }
     };
     loadProducts();
+  }, []);
+
+  useEffect(() => {
+    const checkMonitoreoActivo = async () => {
+      try {
+        const response = await api.get("/productosmonitoreados/detalles");
+        const activos = response.data.filter(
+          (p: any) => !p.fecha_finalizacion_monitoreo || p.fecha_finalizacion_monitoreo === ""
+        );
+
+        if (activos.length > 0) {
+          setMonitoreoActivo({
+            existe: true,
+            producto: activos[0].nombre_producto
+          });
+        }
+      } catch (err) {
+        console.error("Error verificando monitoreo activo:", err);
+      }
+    };
+    checkMonitoreoActivo();
   }, []);
 
   const filteredProducts = productos.filter(p =>
@@ -131,6 +156,34 @@ const AgregarMonitoreo: React.FC = () => {
 
             {/* Search Bar */}
             <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              {/* Alerta de monitoreo activo */}
+              {monitoreoActivo.existe && (
+                <Alert
+                  severity="warning"
+                  className="mb-6 rounded-xl"
+                  sx={{
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+                    backgroundColor: 'rgba(255, 243, 224, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <FaInfoCircle className="text-amber-600 text-lg mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <Typography variant="subtitle2" className="font-bold text-amber-900 mb-1">
+                        Solo puedes tener 1 producto en monitoreo activo
+                      </Typography>
+                      <Typography variant="body2" className="text-amber-800">
+                        Actualmente tienes activo el monitoreo de: <strong>{monitoreoActivo.producto}</strong>
+                      </Typography>
+                      <Typography variant="body2" className="text-amber-700 mt-1 text-sm">
+                        Debes finalizar el monitoreo actual antes de iniciar uno nuevo.
+                      </Typography>
+                    </div>
+                  </div>
+                </Alert>
+              )}
+
                   <TextField
                     fullWidth
                     variant="outlined"
@@ -234,6 +287,7 @@ const AgregarMonitoreo: React.FC = () => {
                                 setSelectedProduct(producto);
                                 setDialogOpen(true);
                               }}
+                              disabled={monitoreoActivo.existe}
                               sx={{
                                 borderRadius: '12px',
                                 textTransform: 'none',
@@ -247,9 +301,13 @@ const AgregarMonitoreo: React.FC = () => {
                                   boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
                                   transform: 'translateY(-2px)',
                                 },
+                                '&:disabled': {
+                                  background: 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)',
+                                  color: 'white',
+                                }
                               }}
                             >
-                              Monitorear Producto
+                              {monitoreoActivo.existe ? 'Monitoreo Activo' : 'Monitorear Producto'}
                             </Button>
                           </CardActions>
                         </Card>
