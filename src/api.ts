@@ -1,4 +1,4 @@
-// api.ts
+// api.ts - Cliente axios con interceptores para autenticación
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
