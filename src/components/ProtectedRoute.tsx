@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import api from '../api';
-import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
   element: React.ComponentType<any>;
@@ -16,25 +15,72 @@ interface User {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles, ...rest }) => {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const [authState, setAuthState] = useState<{
+    loading: boolean;
+    user: User | null;
+    error: boolean;
+  }>({ loading: true, user: null, error: false });
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const checkAuth = async () => {
+      try {
+        const { data } = await api.get('/check-auth', {
+          signal: controller.signal,
+          timeout: 10000 // 10 segundos de timeout
+        });
+
+        if (isMounted) {
+          if (data.authenticated) {
+            setAuthState({
+              loading: false,
+              user: data.user,
+              error: false
+            });
+          } else {
+            setAuthState({
+              loading: false,
+              user: null,
+              error: true
+            });
+          }
+        }
+      } catch (error) {
+        if (isMounted) {
+          setAuthState({
+            loading: false,
+            user: null,
+            error: true
+          });
+        }
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   // Estados de renderizado
-  if (isLoading) {
+  if (authState.loading) {
     return <div className="loading-container">Cargando...</div>;
   }
 
-  if (!isAuthenticated || !user) {
+  if (authState.error || !authState.user) {
     return <Navigate to="/login" replace />;
   }
 
-  // Verificar rol - el backend devuelve user.rol (no user.idrol)
-  const userRol = user.idrol || user.rol;
-  if (roles && userRol && !roles.includes(userRol)) {
+  if (roles && !roles.includes(authState.user.rol)) {
     return <Navigate to="/AccesoProhibido" replace />;
   }
 
-  // Pasar el usuario al componente
-  return React.createElement(Element, { ...rest, user });
+  // FIX: Casting del componente para evitar error de tipos
+  return React.createElement(Element, { ...rest, user: authState.user });
 };
 
 export default ProtectedRoute;
