@@ -50,6 +50,89 @@ const AgregarCondicionAmbiental: React.FC = () => {
     setSuccess(null);
     setIsSubmitting(true);
 
+    // Validaciones
+    const temp_min = parseFloat(formData.temperatura_min);
+    const temp_max = parseFloat(formData.temperatura_max);
+    const hum_min = parseFloat(formData.humedad_min);
+    const hum_max = parseFloat(formData.humedad_max);
+    const lux_min = parseFloat(formData.lux_min);
+    const lux_max = parseFloat(formData.lux_max);
+    const pres_min = parseFloat(formData.presion_min);
+    const pres_max = parseFloat(formData.presion_max);
+
+    // Validar temperatura
+    if (isNaN(temp_min) || isNaN(temp_max)) {
+      setError('Los valores de temperatura son obligatorios');
+      setIsSubmitting(false);
+      return;
+    }
+    if (temp_min >= temp_max) {
+      setError('La temperatura mínima debe ser menor a la temperatura máxima');
+      setIsSubmitting(false);
+      return;
+    }
+    if (temp_min < -50 || temp_max > 100) {
+      setError('Los valores de temperatura deben estar entre -50°C y 100°C');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validar humedad
+    if (isNaN(hum_min) || isNaN(hum_max)) {
+      setError('Los valores de humedad son obligatorios');
+      setIsSubmitting(false);
+      return;
+    }
+    if (hum_min >= hum_max) {
+      setError('La humedad mínima debe ser menor a la humedad máxima');
+      setIsSubmitting(false);
+      return;
+    }
+    if (hum_min < 0 || hum_max > 100) {
+      setError('Los valores de humedad deben estar entre 0% y 100%');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validar lux
+    if (isNaN(lux_min) || isNaN(lux_max)) {
+      setError('Los valores de iluminación son obligatorios');
+      setIsSubmitting(false);
+      return;
+    }
+    if (lux_min < 0 || lux_max < 0) {
+      setError('Los valores de lux no pueden ser negativos');
+      setIsSubmitting(false);
+      return;
+    }
+    if (lux_min >= lux_max) {
+      setError('El valor de lux mínimo debe ser menor al lux máximo');
+      setIsSubmitting(false);
+      return;
+    }
+    if (lux_max > 100000) {
+      setError('El valor de lux máximo no puede superar 100,000 lux');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validar presión
+    if (isNaN(pres_min) || isNaN(pres_max)) {
+      setError('Los valores de presión son obligatorios');
+      setIsSubmitting(false);
+      return;
+    }
+    if (pres_min >= pres_max) {
+      setError('La presión mínima debe ser menor a la presión máxima');
+      setIsSubmitting(false);
+      return;
+    }
+    if (pres_min < 100 || pres_max > 1500) {
+      setError('Los valores de presión deben estar entre 100 hPa y 1500 hPa');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await api.post('/condiciones/', formData);
       if (response.status === 200) {

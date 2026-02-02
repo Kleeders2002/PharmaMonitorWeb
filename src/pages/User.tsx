@@ -12,11 +12,11 @@ const User: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center p-4 relative">
       {/* Botón cerrar sesión - Top Right */}
       <button
         onClick={handleLogout}
-        className="absolute top-6 right-6 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-white border border-gray-200 hover:border-gray-300 group"
+        className="absolute top-6 right-6 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-white border border-gray-200 hover:border-gray-300 group z-50"
       >
         <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
           Cerrar Sesión

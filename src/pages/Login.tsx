@@ -236,9 +236,9 @@ const Login: React.FC = () => {
 
             {/* Error/Success Message */}
             {error && (
-              <div className={`p-4 rounded-xl text-sm font-medium flex items-start gap-3 animate-fade-in ${
-                error.includes('✔️') 
-                  ? 'bg-green-50 text-green-700 border-2 border-green-200' 
+              <div className={`relative z-50 p-4 rounded-xl text-sm font-medium flex items-start gap-3 animate-fade-in ${
+                error.includes('✔️')
+                  ? 'bg-green-50 text-green-700 border-2 border-green-200'
                   : 'bg-red-50 text-red-700 border-2 border-red-200'
               }`}>
                 <span className="text-lg">{error.includes('✔️') ? '✓' : '⚠'}</span>

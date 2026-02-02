@@ -244,7 +244,7 @@ const GraficoMonitoreo: React.FC = () => {
         </div>
 
         <Link
-  href={`/consultarmetricas/${selectedProduct}`}
+  href="/ConsultarMetricas"
   className="relative flex items-center gap-2 group transition-all duration-300 no-underline overflow-hidden"
   sx={{
     '&:hover': {
