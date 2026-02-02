@@ -36,7 +36,7 @@ const AlertasActivas = () => {
           api.get("/alertas"),
           api.get("/productosmonitoreados/detalles")
         ]);
-        
+
         setAlertas(alertasResponse.data);
         setProductos(productosResponse.data);
       } catch (error) {
@@ -45,8 +45,15 @@ const AlertasActivas = () => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
+
+    // Actualizar alertas automáticamente cada 10 segundos
+    const interval = setInterval(() => {
+      fetchData();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getProducto = (idProducto: number) => {

@@ -35,13 +35,113 @@ const AgregarCondicionAmbiental: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{
+    temperatura?: string;
+    humedad?: string;
+    lux?: string;
+    presion?: string;
+  }>({});
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Validar en tiempo real
+    validateField(name, value);
+  };
+
+  const validateField = (name: string, value: string) => {
+    const numValue = parseFloat(value);
+    const errors = { ...validationErrors };
+
+    // Validar temperatura
+    if (name === 'temperatura_min' && formData.temperatura_max) {
+      const max = parseFloat(formData.temperatura_max);
+      if (numValue >= max) {
+        errors.temperatura = 'La temperatura mínima debe ser menor a la máxima';
+      } else if (numValue < -50) {
+        errors.temperatura = 'La temperatura mínima no puede ser menor de -50°C';
+      } else {
+        delete errors.temperatura;
+      }
+    } else if (name === 'temperatura_max' && formData.temperatura_min) {
+      const min = parseFloat(formData.temperatura_min);
+      if (numValue <= min) {
+        errors.temperatura = 'La temperatura máxima debe ser mayor a la mínima';
+      } else if (numValue > 100) {
+        errors.temperatura = 'La temperatura máxima no puede ser mayor de 100°C';
+      } else {
+        delete errors.temperatura;
+      }
+    }
+
+    // Validar humedad
+    if (name === 'humedad_min' && formData.humedad_max) {
+      const max = parseFloat(formData.humedad_max);
+      if (numValue >= max) {
+        errors.humedad = 'La humedad mínima debe ser menor a la máxima';
+      } else if (numValue < 0) {
+        errors.humedad = 'La humedad mínima no puede ser negativa';
+      } else {
+        delete errors.humedad;
+      }
+    } else if (name === 'humedad_max' && formData.humedad_min) {
+      const min = parseFloat(formData.humedad_min);
+      if (numValue <= min) {
+        errors.humedad = 'La humedad máxima debe ser mayor a la mínima';
+      } else if (numValue > 100) {
+        errors.humedad = 'La humedad máxima no puede ser mayor de 100%';
+      } else {
+        delete errors.humedad;
+      }
+    }
+
+    // Validar lux
+    if (name === 'lux_min') {
+      if (numValue < 0) {
+        errors.lux = 'El valor de lux no puede ser negativo';
+      } else if (formData.lux_max && numValue >= parseFloat(formData.lux_max)) {
+        errors.lux = 'El lux mínimo debe ser menor al máximo';
+      } else {
+        delete errors.lux;
+      }
+    } else if (name === 'lux_max' && formData.lux_min) {
+      const min = parseFloat(formData.lux_min);
+      if (numValue <= min) {
+        errors.lux = 'El lux máximo debe ser mayor al mínimo';
+      } else if (numValue > 100000) {
+        errors.lux = 'El lux máximo no puede ser mayor de 100,000';
+      } else {
+        delete errors.lux;
+      }
+    }
+
+    // Validar presión
+    if (name === 'presion_min' && formData.presion_max) {
+      const max = parseFloat(formData.presion_max);
+      if (numValue >= max) {
+        errors.presion = 'La presión mínima debe ser menor a la máxima';
+      } else if (numValue < 100) {
+        errors.presion = 'La presión mínima no puede ser menor de 100 hPa';
+      } else {
+        delete errors.presion;
+      }
+    } else if (name === 'presion_max' && formData.presion_min) {
+      const min = parseFloat(formData.presion_min);
+      if (numValue <= min) {
+        errors.presion = 'La presión máxima debe ser mayor a la mínima';
+      } else if (numValue > 1500) {
+        errors.presion = 'La presión máxima no puede ser mayor de 1500 hPa';
+      } else {
+        delete errors.presion;
+      }
+    }
+
+    setValidationErrors(errors);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -246,6 +346,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 2"
+                          error={!!validationErrors.temperatura}
+                          helperText={validationErrors.temperatura || 'Rango: -50°C a 100°C'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -276,6 +379,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 8"
+                          error={!!validationErrors.temperatura}
+                          helperText={validationErrors.temperatura || 'Rango: -50°C a 100°C'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -313,6 +419,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 30"
+                          error={!!validationErrors.humedad}
+                          helperText={validationErrors.humedad || 'Rango: 0% a 100%'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -343,6 +452,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 60"
+                          error={!!validationErrors.humedad}
+                          helperText={validationErrors.humedad || 'Rango: 0% a 100%'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -380,6 +492,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 0"
+                          error={!!validationErrors.lux}
+                          helperText={validationErrors.lux || 'Mínimo: 0 lux, Máximo: 100,000 lux'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -410,6 +525,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 500"
+                          error={!!validationErrors.lux}
+                          helperText={validationErrors.lux || 'Mínimo: 0 lux, Máximo: 100,000 lux'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -447,6 +565,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 900"
+                          error={!!validationErrors.presion}
+                          helperText={validationErrors.presion || 'Rango: 100 hPa a 1500 hPa'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -477,6 +598,9 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           onChange={handleChange}
                           required
                           type="number"
+                          placeholder="Ej: 1100"
+                          error={!!validationErrors.presion}
+                          helperText={validationErrors.presion || 'Rango: 100 hPa a 1500 hPa'}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '12px',
@@ -507,7 +631,7 @@ const AgregarCondicionAmbiental: React.FC = () => {
                           variant="contained"
                           fullWidth
                           size="large"
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || Object.keys(validationErrors).length > 0}
                           sx={{
                             height: '56px',
                             borderRadius: '14px',
