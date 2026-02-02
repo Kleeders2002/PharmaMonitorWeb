@@ -60,12 +60,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Error en logout:', error);
     } finally {
-      // Limpiar estado local
+      // Limpiar estado local PRIMERO
       setUser(null);
 
-      // Forzar recarga completa de la aplicación
-      // Esto limpia TODA la memoria de React, estado, caché, etc.
-      window.location.href = '/login';
+      // Limpiar TODOS los datos de almacenamiento local
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Forzar recarga COMPLETA de la aplicación
+      // Esto elimina TODA la memoria de React, estado, caché, etc.
+      window.location.replace('/login');
     }
   };
 
