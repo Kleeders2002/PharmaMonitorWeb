@@ -5,9 +5,9 @@ import Home from './pages/Home';
 import User from './pages/User';
 import Header from './components/Header';
 import AdminDashboard from './pages/AdminDashboard';
-import AgregarUsuario from './pages/AgregarUsuario'; 
-import AgregarProducto from './pages/AgregarProducto'; 
-import AgregarCondicionAmbiental from './pages/AgregarCondicionAmbiental'; 
+import AgregarUsuario from './pages/AgregarUsuario';
+import AgregarProducto from './pages/AgregarProducto';
+import AgregarCondicionAmbiental from './pages/AgregarCondicionAmbiental';
 import ConsultarUsuarios from './pages/ConsultarUsuarios';
 import ConsultarCondiciones from './pages/ConsultarCondiciones';
 import ConsultarProductos from './pages/ConsultarProductos';
@@ -18,11 +18,12 @@ import VerAlertas from './pages/VerAlertas';
 import ResetPassword from './pages/ResetPassword';
 import EliminarUsuario from './components/EliminarUsuario';
 import EditarUsuario from './components/EditarUsuario';
-import AccesoProhibido from './pages/AccesoProhibido'; // Nueva página 
+import AccesoProhibido from './pages/AccesoProhibido';
 import Perfil from './components/Perfil';
-import ProtectedRoute from './components/ProtectedRoute'; // Importar ProtectedRoute
+import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
 import AgregarMonitoreo from './pages/AgregarMonitoreo';
+import { AuthProvider } from './contexts/AuthContext'; // Importar AuthProvider
 
 function App() {
   const location = useLocation();
@@ -59,7 +60,9 @@ function App() {
 function Root() {
   return (
     <Router>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </Router>
   );
 }

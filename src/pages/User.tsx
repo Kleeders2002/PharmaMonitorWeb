@@ -1,21 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import { useAuth } from '../contexts/AuthContext';
 
 const User: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      // Llamar al endpoint de logout del backend
-      await api.post('/logout');
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    } finally {
-      // Siempre redirigir al login y forzar recarga completa
-      // Esto elimina cualquier estado en memoria
-      window.location.href = '/login';
-    }
+    await logout(); // Usar el método del AuthContext
   };
 
   return (

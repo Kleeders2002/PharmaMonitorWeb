@@ -14,6 +14,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
 import { format } from 'date-fns';
 import es from 'date-fns/locale/es';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProductoMonitoreado {
   id: number;
@@ -34,6 +35,7 @@ interface Alerta {
 }
 
 const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
+  const { logout } = useAuth(); // Usar el hook de autenticación
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [alertas, setAlertas] = useState<Alerta[]>([]);
@@ -188,13 +190,7 @@ const HeaderDashboard: React.FC<{ title: string }> = ({ title }) => {
   };
 
   const handleLogout = async () => {
-    try {
-      await api.post('/logout');
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    } finally {
-      window.location.href = '/login';
-    }
+    await logout(); // Usar el método del AuthContext que limpia todo y redirige
   };
 
   const alertasActivas = alertas
