@@ -8,10 +8,12 @@ interface ProtectedRouteProps {
 }
 
 interface User {
-  sub: string;
-  rol: number;
-  exp: number;
+  idusuario: number;
+  email: string;
   nombre: string;
+  apellido: string;
+  idrol: number;
+  foto?: string;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles, ...rest }) => {
@@ -75,7 +77,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element, roles
     return <Navigate to="/login" replace />;
   }
 
-  if (roles && !roles.includes(authState.user.rol)) {
+  if (roles && !roles.includes(authState.user.idrol)) {
     return <Navigate to="/AccesoProhibido" replace />;
   }
 
