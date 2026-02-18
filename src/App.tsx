@@ -34,7 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/AdminDashboard" element={<ProtectedRoute element={AdminDashboard} roles={[1]} />} />
-        <Route path="/User" element={<User />} />
+        <Route path="/User" element={<ProtectedRoute element={User} roles={[2]} />} />
         <Route path="/AgregarUsuario" element={<ProtectedRoute element={AgregarUsuario} roles={[1]} />} />
         <Route path="/AgregarProducto" element={<ProtectedRoute element={AgregarProducto} roles={[1]} />} />
         <Route path="/AgregarCondicionAmbiental" element={<ProtectedRoute element={AgregarCondicionAmbiental} roles={[1]} />} />
